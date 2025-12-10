@@ -208,4 +208,4 @@ Updated high-level design spec (integrated “Requirements and Attestations” a
 •  Policy evaluation: deterministic, side-effect-free Boolean evaluation with optional weighted scoring; produces explicit reasons on failure.
 •  Verifier registry: directory of issuer identifiers, supported requirement types, trust calibration method, and status.
 
-If you want, I can convert this into a formal, implementation-agnostic OpenAPI outline (endpoints, fields, error codes) and a short glossary, still without including any code.
+AI GENERATED.
