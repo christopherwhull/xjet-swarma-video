@@ -1,6 +1,7 @@
-# xjet-swarma-video
+# xjet-swarma-video 
 A video deilvery system concept
 
+https://youtu.be/eEjYXw3j4pM?si=yrF0K31CxAWU-tgl
 
 Updated high-level design spec (integrated “Requirements and Attestations” and non-card payments)
 
