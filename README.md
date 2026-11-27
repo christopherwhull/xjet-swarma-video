@@ -213,6 +213,7 @@ See [the full roadmap (§28)](docs/design.md#s28).
 | Document | Purpose |
 | --- | --- |
 | **This README** | GitHub-native project introduction and current direction. |
+| **[MVP open questions](openquestions.md)** | First-release decisions, proposed scope reductions, and measurable release criteria still to resolve. |
 | **[Executive overview](docs/overview.md)** | Publisher responsibilities, viewer choice, community ownership, and the business proposition. |
 | **[Full design](docs/design.md)** | Architecture, journeys, proposed interfaces, economic boundaries, and acceptance criteria. |
 | **[Video proposal comparison](docs/video-comparison.md)** | Timestamped original goals, design coverage, intentional differences, and gaps. |
