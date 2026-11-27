@@ -7,7 +7,7 @@ xjet-swarma-video is a **decentralized video publishing and delivery concept**: 
 | | |
 |--|--|
 | **Status** | High-level product and architecture design (not production software yet) |
-| **Full design** | [`docs/design.html`](docs/design.html) — journey-first, Parts A–E, sections 1–28 |
+| **Full design** | [`docs/design.html`](docs/design.html) — journey-first, Parts A–E, sections 1–28 (reading order) |
 | **Demo / pitch video** | [YouTube](https://youtu.be/eEjYXw3j4pM?si=yrF0K31CxAWU-tgl) |
 
 ---
@@ -106,7 +106,7 @@ Creator (CEA)                 Coordination fabric (CDF)              Viewer
 5. Play (ABR, captions; edge/swarm/origin)
 6. Session spend stays honest and capped
 7. Report when needed
-8. Daily watch quota — default max **48 hours** of content timeline per account per day (see design §28)
+8. Daily watch quota — default max **48 hours** of content timeline per account per day (see design §15)
 
 ---
 
@@ -134,7 +134,7 @@ End accounts are limited to a **reasonable** amount of streaming:
 - **Guests:** tighter anonymous caps; **pennies do not** auto-bypass the network ceiling
 - **Creators** may tighten further; they may not punch through the network anti-farm ceiling without a special program
 
-Full rules: [`docs/design.html`](docs/design.html) section 28.
+Full rules: [`docs/design.html`](docs/design.html) section 15.
 
 ## MVP roadmap (summary)
 
@@ -146,7 +146,7 @@ Full rules: [`docs/design.html`](docs/design.html) section 28.
 | **3** | ISP PoD, multi-home packages, diversity pay, live streaming |
 | **4** | Federation, hash-list partnerships, conformance |
 
-Details: [`docs/design.html`](docs/design.html) section 25.
+Details: [`docs/design.html`](docs/design.html) section 27.
 
 ---
 
@@ -177,7 +177,7 @@ The HTML is organized **journey-first** (creator and viewer before build-contrac
 
 ## Open questions (honest backlog)
 
-Still active in the full design: proof-of-attention without invasive tracking; micropayment tax/portability; bot rings vs clawbacks; fill-cell politics across ISPs; offline play with expiring keys. See section 16 in the full design.
+Still active in the full design: proof-of-attention without invasive tracking; micropayment tax/portability; bot rings vs clawbacks; fill-cell politics across ISPs; offline play with expiring keys. See section 28 in the full design.
 
 ---
 
