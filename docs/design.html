@@ -366,6 +366,7 @@
   <div class="wrap">
     <header class="doc-header">
       <h1>xjet-swarma-video</h1>
+      <p class="meta"><a href="../index.html">Executive overview — what the video publisher provides</a></p>
       <p class="subtitle">High-level design — total solution · journey-first · §§ in reading order</p>
       <p class="meta"><a href="video-comparison.html">Original video goals vs our design delivery — timestamped comparison and gaps</a></p>
       <p class="meta">Product concept: <strong>xjet-swarma-video</strong> · creator-owned storage &amp; keys · pennies-per-view · multi-ISP encrypted delivery</p>
@@ -485,17 +486,20 @@
       <h2>1) Purpose and scope</h2>
       <ul>
         <li><strong>Goal:</strong> Decentralized, creator-hosted video publishing and delivery. Creators own storage and keys; a neutral coordination fabric handles discovery, access policy, verification of requirements, key release, and optional delivery settlement with ISP/edge caches. Delivery is hybrid P2P + HTTP with optional ISP/edge caching of ciphertext.</li>
-        <li><strong>Out of scope:</strong> Central custody of viewer “payments” or funds meant for access; general-purpose social networking; long-term DRM escrow of creator master keys; caches holding plaintext or content keys.</li>
+        <li><strong>Out of scope:</strong> Central custody of viewer “payments” or funds meant for access; general-purpose social networking beyond publisher-owned pages and feedback forums (§6.11); long-term DRM escrow of creator master keys; caches holding plaintext or content keys.</li>
       </ul>
     </section>
 <section id="s2">
       <h2>2) Core principles</h2>
       <ul>
         <li><strong>Creator sovereignty:</strong> Content and encryption keys remain with creators; release is policy-driven.</li>
+        <li><strong>Publisher-owned presence:</strong> publishers define their public page, highlighted videos, and feedback forum. Human-led niche curation and viewer-selected AI discovery are choices, not compulsory platform ranking. See §6.11 and §4.8.</li>
+        <li><strong>Trust before attention:</strong> the viewer owns a local catalog and decides which publisher identities may populate it. Central indexing, publication volume, payment, and popularity do not confer viewer trust. Untrusted publishers do not enter the ordinary feed or autoplay; explicit discovery/review is a separate action (§12.7).</li>
         <li><strong>No platform commercial injection:</strong> The platform does not insert ads, promotions, or other unsolicited commercial material into the creator–viewer relationship. Quality questionnaires are the only platform-inserted engagement; necessary playback, consent, payment, and safety controls are operational UI, not advertising inventory.</li>
         <li><strong>Bilateral overlay consent:</strong> Optional overlays remain hidden unless both creator and viewer have explicitly opted in before display. Publication, payment, gift acceptance, or continued playback is not overlay consent. See §7.6.</li>
         <li><strong>Open storage:</strong> Any S3-compatible store (MinIO, major clouds, USB-backed nodes, etc.).</li>
-        <li><strong>Hybrid delivery:</strong> P2P swarms for scale; HTTP/S3 (origin or edge) for long tail and poor swarm health.</li>
+        <li><strong>Publisher-operated cloud backup:</strong> every published local-origin title has a verified serving replica on a cloud instance operated and funded by its video publisher. An unplugged appliance must not be the sole source of published media; the CDF does not become the backup host. See <a href="#cloud-backup-origin">§4.7</a>.</li>
+        <li><strong>Hybrid delivery basis:</strong> HLS playlists and HTTPS media delivery, assisted by WebTorrent/WebRTC peers for scale; origin/edge HTTP remains available when peer assistance is absent or disabled. See <a href="#webtorrent-hls">§7.7</a>.</li>
         <li><strong>Verification-agnostic access:</strong> Access is not “credit card checkout.” Requirements are API-described (goodwill, puzzle, email, social proof, crypto receipt, ad attention, allowlists, etc.). Publishers choose how little or how much to verify.</li>
         <li><strong>Split ledgers:</strong> <em>Access attestations / key grants</em> are separate from <em>delivery settlement</em> (ISP cache incentives). Money or credits for bytes delivered never substitute for unlock policy.</li>
         <li><strong>Minimal trusted core:</strong> Coordination fabric moves metadata, proofs, short-lived key grants, cache hints, and settlement metering—not video plaintext and not custody of access payments.</li>
@@ -512,7 +516,7 @@
 
       <h3>4.1 Creator Endpoint App (CEA)</h3>
       <ul>
-        <li>Transcode and segment (GOP-aligned segments; duration is a product choice).</li>
+        <li>Transcode and package HLS multivariant/media playlists with GOP-aligned segments; duration is a product choice. Publish the signed transport mapping described in §7.7.</li>
         <li>Encrypt <strong>per segment</strong> with unique content keys; wrap under creator master key (local KMS/HSM optional).</li>
         <li>Upload encrypted segments + checksums to S3-compatible storage; prefer immutability after publish.</li>
         <li>Push metadata: title, description, tags, language, thumbnails/previews, manifest (ordered segment IDs), <strong>access Policy</strong>, and optional <strong>delivery/cache Policy</strong> (pin sets, rebate budgets, prefetch allow-lists).</li>
@@ -525,13 +529,15 @@
         <li>S3-compatible objects addressed by content_id + segment_id.</li>
         <li>Integrity: per-segment checksum and optional Merkle proofs.</li>
         <li>Access: public ciphertext and/or presigned URLs; edges and peers fetch ciphertext only.</li>
+        <li>Local origins replicate published assets to the publisher-operated cloud backup origin before a title version is marked ready (§4.7).</li>
       </ul>
 
       <h3>4.3 Coordination &amp; Discovery Fabric (CDF)</h3>
       <ul>
         <li>Global, active-active, largely stateless control plane; target high uptime; UI/strings aimed at many locales (~250 languages as a product goal).</li>
         <li><strong>Content registry:</strong> creator-signed metadata, manifests, access policies, segment location pointers (not media bytes).</li>
-        <li><strong>Discovery / offer catalog:</strong> search, browse, previews, clear disclosure of unlock paths.</li>
+        <li><strong>Metadata and location libraries:</strong> searchable publisher/page/title records plus verified, expiring origin/replica endpoint advertisements; resolve where authorized clients can fetch media without owning or decrypting it (§4.8).</li>
+        <li><strong>Discovery / offer catalog:</strong> publisher-selected shared records and search/change feeds for viewer-owned local catalogs; clear unlock disclosures, no compulsory global recommendation feed (§12.7).</li>
         <li><strong>Verification broker:</strong> pluggable verifier adapters → signed Attestations; publisher-defined depth of checking.</li>
         <li><strong>Key request broker:</strong> relays key requests to creator Key Agents; returns KeyGrants or structured failure reasons.</li>
         <li><strong>Edge registry &amp; delivery control:</strong> register ISP/edge nodes; publish popularity hints, pin/prefetch manifests, delist streams; meter Proof of Delivery; optional settlement credits (separate from attestations).</li>
@@ -540,8 +546,9 @@
 
       <h3>4.4 Viewer applications</h3>
       <ul>
-        <li>P2P engine limited to permitted content/segment swarms.</li>
-        <li>HTTP fallback: creator origin and/or edge caches.</li>
+        <li>Local catalog, explicit publisher trust/block list, provenance-aware imports, and viewer-authorized agents reviewing eligible content (§12.7).</li>
+        <li>HLS playback with a WebTorrent/WebRTC peer-assisted segment loader, limited to permitted content/segment swarms (§7.7).</li>
+        <li>HTTPS startup and fallback: creator origin and/or edge caches, without requiring a healthy swarm.</li>
         <li>Requirements UX: goodwill, puzzle, email, social, crypto receipt, ad watch, allowlist, etc.</li>
         <li>Attestation handling: bind actions to viewer identity and content scope.</li>
         <li>Secure playback: keys in platform keystore/TEE where available; decrypt in memory.</li>
@@ -564,6 +571,53 @@
         <li>Never store content keys; never evaluate access Policy unless they separately run a verifier.</li>
         <li>Participate in <strong>Delivery Credits / rebates</strong> when creators fund them; otherwise operate on transit-savings alone.</li>
       </ul>
+      <h3 id="cloud-backup-origin">4.7 Publisher-operated cloud backup origin</h3>
+      <p><strong>Availability requirement:</strong> the video publisher runs a separate, always-on cloud instance as a warm, serving backup for their local origin, in their own cloud account with their own billing and administrative control. This is a required origin replica, not an optional ISP cache, a restore-only archive, or storage owned by CDF. Losing local power or connectivity triggers media failover to this instance.</p>
+      <ul>
+        <li><strong>Complete serving copy:</strong> replicate each published VOD version's ciphertext segments, HLS playlists, initialization objects, captions, previews, and signed metadata to the cloud origin, optionally using publisher-controlled object storage behind the instance. Preserve object ids, checksums, key ids, and byte identity across origins so HLS and WebTorrent do not require re-encoding or new grants.</li>
+        <li><strong>Publish gate:</strong> upload immutable objects, verify the cloud copy and off-network reads, then atomically advertise the signed ready manifest and both endpoints. Do not mark a new title/version ready while its cloud copy is incomplete. Show replication progress, last verified version, failed objects, and cloud readiness in the creator console.</li>
+        <li><strong>Failover:</strong> use independently reachable endpoint discovery and off-network probes; the player retries the same verified segment from the cloud endpoint when local requests fail or miss deadlines. Do not rely solely on DNS changes or a redirect served by the failed appliance. Bound retries and test failover within the configured playback-buffer budget; publish measured recovery targets rather than promising zero interruption.</li>
+        <li><strong>Safe failback:</strong> resume local preference only after sustained health and version/integrity checks. Serve immutable published versions while synchronizing; do not let a stale local node overwrite newer metadata or resurrect a withdrawn title. Use backoff to avoid switching repeatedly between unstable origins.</li>
+        <li><strong>Unlock continuity:</strong> media replication does not replicate plaintext keys into public storage. A publisher-controlled cloud Key Agent or separately reachable authorized agent must sustain new grants when the appliance is down, with scoped credentials and creator-controlled key protection (§10). Funding/quota state and revocations must remain authoritative across agent failover; do not double-issue paid credits or bypass limits. CDF and ciphertext-only relays still receive no unwrapped media keys.</li>
+        <li><strong>Operations and cost:</strong> publisher selects the provider, deploys or connects the instance through the wizard, authorizes narrowly scoped credentials, and accepts storage, compute, and egress costs before provisioning. Monitor capacity, certificate expiry, replication lag, billing limits, and regional failures. Alert on loss of backup readiness; if both origins fail, disclose the outage and stop new unavailable paid offers rather than silently provisioning platform-funded capacity.</li>
+        <li><strong>Removal and recovery:</strong> delist, access revocation, and required removal/restriction apply to both local and cloud origins; returning nodes reconcile tombstones before serving. Keep versioned/offline recovery backups separately: a serving replica alone is not protection against accidental deletion, compromise, or mirrored corruption.</li>
+        <li><strong>Live limitation:</strong> replicate live segments as they arrive and disclose lag. Cloud failover can serve only already-received media; continuing a live broadcast after the local encoder loses power needs an independent publisher-operated ingest/encoder path. Do not claim a cloud replica can produce missing live footage.</li>
+      </ul>
+      <p><strong>Acceptance:</strong> publish a replicated test title, disable peers/edges, unplug the local appliance during playback, and verify continuation and a fresh viewer unlock from the cloud path without duplicate billing. Repeat with local-only Key Agent failure, incomplete replication, expired cloud credentials, both origins unavailable, and local recovery after a delist. Record actual failover time and rebuffering. This remains a design requirement, not a deployed instance.</p>
+      <h3 id="metadata-library">4.8 Centralized platform servers — metadata and location libraries</h3>
+      <p><strong>Executive definition:</strong> the centralized platform servers hold the discovery material each publisher chooses to share: metadata, locations, and optionally closed captions/transcripts, reviews, and collection references. Viewers find publishers through any number of routes and build their own local catalogs; the directory is one source, not the owner of attention or a mandatory feed. A discoverable record does not make its publisher trusted (§12.7).</p>
+      <h4>What the library contains</h4>
+      <table>
+        <thead><tr><th>Library record</th><th>Information held centrally</th><th>Authority and boundary</th></tr></thead>
+        <tbody>
+          <tr><td>Publisher and public page</td><td>Stable publisher id, public verification keys, name/about text, page version, public page/forum endpoints, and publisher-authored featured video/collection references</td><td>Publisher controls page content and ordering; CDF indexes signed public records, not private forum administration or an ownership claim over the community</td></tr>
+          <tr><td>Video catalog</td><td>Title, description, tags, language, duration, captions availability, ratings/warnings, disclosures, and preview/thumbnail references</td><td>Publisher supplies metadata and rights declarations; platform may label or delist under published rules, without silently rewriting the signed source</td></tr>
+          <tr><td>Shared captions and reviews</td><td>Publisher-selected caption/transcript text or references, language/version, authorized review text/excerpts or links, reviewer attribution, and selection provenance</td><td>Sharing is per asset and purpose, with author rights and visibility respected. A publisher's selected reviews are labeled as selected, not a claim to represent all feedback or suppress another publisher's lawful review</td></tr>
+          <tr><td>Media description</td><td>Signed manifest/version, renditions and tracks, segment identifiers, ciphertext hashes, public key ids, and WebTorrent/HLS transport references</td><td>Enough to select and verify bytes, never the secret keys needed to decrypt them; large inventories can remain publisher-hosted with signed references</td></tr>
+          <tr><td>Locations and readiness</td><td>Local and publisher-cloud origin endpoints, authorized replica/edge hints, transport capabilities, health, replica version, last verification, and expiry</td><td>Location is a current claim, not proof of ownership, payment, or permission to watch. Publisher-cloud readiness is checked independently of optional caches</td></tr>
+          <tr><td>Viewing offer and unlock service</td><td>Public access Policy/version, free/paid offer descriptions, prices/caps, gift availability, verifier choices, and Key Agent endpoint/health</td><td>Disclosure and routing only; authoritative unlock remains with publisher Key Agents and payment proofs, never the location directory</td></tr>
+          <tr><td>Discovery and safety state</td><td>Search indexes, attributed curated collections, coarse popularity/quality summaries, and separate delist, warning, or jurisdiction status</td><td>Distinguish publisher selections, viewer-agent selections, aggregate signals, and network enforcement. No covert paid placement or behavioral viewer dossiers in the public catalog</td></tr>
+        </tbody>
+      </table>
+      <h4>Publishing, lookup, and freshness</h4>
+      <ol>
+        <li><strong>Choose what to share:</strong> preview the exact central discovery payload and select metadata, caption/transcript, review, and preview sharing separately. Full captions can disclose a paid video's substance even when its video remains encrypted; explain this before opt-in. Unshared assets remain on the publisher's service and are not silently transcribed, scraped, or sent to third-party AI by CDF. Minimal routing/verification fields are disclosed as required for any chosen registration.</li>
+        <li><strong>Register:</strong> publisher signs/version-publishes page, title, offer, and location records; prove control before accepting publisher/domain changes. Use authenticated, authorized updates and idempotency; reject stale revisions and forged ownership changes.</li>
+        <li><strong>Verify:</strong> validate signatures, schemas, content/manifest consistency, and off-network origin readiness. Location probes must reject private/internal addresses, unsafe redirects, oversized responses, and arbitrary code; registration is not an open server-side fetching proxy.</li>
+        <li><strong>Index:</strong> materialize searchable metadata and public collection references. Maintain provenance and keep operator labels separate from publisher-authored content; a page editor changes their page, not the network's entire catalog.</li>
+        <li><strong>Discover and resolve:</strong> the viewer's local catalog or authorized agent queries documented read interfaces for permitted records and fresh endpoints. Apply local publisher trust before normal presentation; unfamiliar publishers remain in a separate, explicitly requested discovery/review workflow. Required grants still govern subsequent media fetching through HLS/HTTPS, WebTorrent, or an eligible edge.</li>
+        <li><strong>Refresh:</strong> expire/renew location advertisements, probe actual availability, and record which immutable versions each replica can serve. Use stable ids rather than treating changing IPs or URLs as a new title; do not put long-lived storage credentials or viewer-specific signed URLs in the public index. Mint short-lived fetch URLs through authorized endpoints when needed.</li>
+        <li><strong>Withdraw:</strong> propagate removals, tombstones, revoked ownership keys, and policy changes to derived indexes/caches. Returning origins must not re-advertise stale withdrawn versions. If discovery is down, cached verified metadata may support already-authorized playback only within its freshness, safety, quota, and grant constraints; never bypass access checks to hide an outage.</li>
+      </ol>
+      <h4>Discovery choice and operational boundaries</h4>
+      <ul>
+        <li><strong>Human niche curation:</strong> publishers and identified curators can publish attributed, ordered collections of eligible public video references, with subject expertise and selection notes. Preserve the human editor's order when presenting that collection; clearly distinguish it from personalized or algorithmically ranked results.</li>
+        <li><strong>Your agent, your choice:</strong> viewer-selected agents maintain/review the local catalog from trusted feeds and publisher-shared metadata, captions, and reviews. Agents may inspect unfamiliar sources only within the viewer's explicit discovery policy; no model-generated trust decisions silently expand subscriptions. This does not imply a platform AI service or access to private analytics, forum membership, keys, or credentials. Private actions need scoped, revocable authorization.</li>
+        <li><strong>Editorial authority:</strong> publisher controls publisher-page highlights; curator controls their attributed collection; viewer controls personal discovery preferences. An AI-created list must be labeled as agent-selected, not passed off as a human curator's original list. External links/references do not grant rights to republish another creator's media.</li>
+        <li><strong>Central but replaceable:</strong> keep schemas, ids, signatures, pagination, and change feeds documented for interoperable clients and later independent indexes. This does not claim competing portals/federation are implemented; those remain separate roadmap work.</li>
+        <li><strong>Not literally metadata only:</strong> platform servers also operate verification/key relays, rate/quota controls, reports/cases, billing/settlement records as applicable, and the encrypted analytics store (§20.1). Public previews may be cached. Isolate these operational/private stores from the public library; this executive description must not erase their security and privacy obligations or turn CDF into the default media host.</li>
+      </ul>
+      <p><strong>Acceptance:</strong> publish a signed publisher page and title, discover them through a human collection and a read-only agent client, resolve local/cloud copies, and verify direct encrypted playback. Reject forged page edits, stale/poisoned locations, unsafe probe targets, and unauthorized access to private records. Verify expiry/removal propagation, origin failover, and that discovery responses contain no content keys or per-viewer analytics.</p>
     </section>
 <section id="s5">
       <h2>5) Business order &amp; multi-ISP cache-fill model</h2>
@@ -918,6 +972,7 @@
       <p>This is the creator-facing path through the system. Detailed mechanics live in the linked sections.</p>
       <ol>
         <li><strong>Act as content creator</strong> — publish video and expect payment (<a href="#s6">§6</a>).</li>
+        <li><strong>Set up the creator appliance</strong> — install or flash a supported device, complete the guided connectivity and recovery checks, then publish without terminal commands. <a href="#turnkey-appliance">§6.10</a></li>
         <li><strong>Establish identity &amp; org</strong> — creator root keys, optional team roles (Owner, Publisher, Policy, Key Operator, Finance, Moderator). <a href="#s12">§12</a></li>
         <li><strong>Run CEA</strong> — transcode, segment, per-segment encrypt, upload to your S3/MinIO, optional seed. <a href="#s4">§4.1</a>, <a href="#s7">§7</a></li>
         <li><strong>Publish metadata</strong> — title, preview pack, manifest, content warnings. <a href="#s7">§7</a>, <a href="#s13">§13.1</a></li>
@@ -933,18 +988,20 @@
     </section>
 
     <section id="s6">
-      <h2>6) Content creator role (publishers who expect payment)</h2>
+      <h2>6) Content creators and publishers (media and recommendations)</h2>
       <p>
         A <strong>content creator</strong> (also: publisher) is a person or organization that
         <strong>puts video on the network</strong> and <strong>expects to be paid</strong> when viewers
         unlock and watch—normally in <strong>pennies-scale</strong> earnings that appear as viewing starts—
         while retaining ownership of storage, encryption keys, and unlock policy.
       </p>
+      <p><strong>Publisher is the broader distribution role:</strong> a user who shares recommendations or reviews also publishes under their own identity, from a local or cloud setup (§6.12). They need not create, host, or earn money from the referenced videos. Media creators retain the rights, keys, access rules, and earnings for their own work; recommendation publishing does not transfer those rights.</p>
       <h3>6.1 Who counts as a content creator</h3>
       <ul>
         <li>Individuals, studios, educators, brands, or collectives that <strong>origin-publish</strong> titles.</li>
-        <li>They operate (or authorize) a <strong>Creator Endpoint App (CEA)</strong>, origin bucket, and Key Agent path.</li>
-        <li>They hold a <strong>creator root identity</strong> used to sign manifests, policies, and KeyGrants (or Delegation Grants).</li>
+        <li>Recommendation/review publishers are a distinct publishing mode (§6.12); media-specific bucket, Key Agent, and payout duties apply only when they also publish media or offers requiring them.</li>
+        <li>Media origin-publishers operate (or authorize) a <strong>Creator Endpoint App (CEA)</strong>, origin bucket, and Key Agent path.</li>
+        <li>Media origin-publishers hold a <strong>creator root identity</strong> used to sign manifests, policies, and KeyGrants (or Delegation Grants); recommendation publishers sign their own records without acquiring media-key authority.</li>
         <li>They are <strong>not</strong> merely viewers, ISP edge operators, verifiers, or CDF operators—though one human may wear multiple hats with separate identities.</li>
       </ul>
       <h3>6.2 Core job to be done</h3>
@@ -962,6 +1019,7 @@
       <h3>6.3 Rights</h3>
       <ul>
         <li><strong>Custody of masters</strong> — choose origin storage (MinIO, cloud S3, etc.).</li>
+        <li><strong>Own the public presence</strong> — define page content, featured videos, collections, and feedback forum rules/data portability (§6.11).</li>
         <li><strong>Custody of keys</strong> — master keys stay creator-controlled; CDF never holds unwrapped content keys.</li>
         <li><strong>Policy and pricing sovereignty</strong> — requirements, pennies, free paths, grant windows.</li>
         <li><strong>Payout sovereignty</strong> — creator wallets/endpoints; no default platform MoR on access value.</li>
@@ -973,6 +1031,7 @@
         <li>Only publish content they have rights to distribute.</li>
         <li>Accurate metadata, previews, and content warnings.</li>
         <li>Reachable unlock path (Key Agent) when promising paid or gated viewing.</li>
+        <li>Operate and fund a verified cloud backup origin for published local-origin content, including an unlock path that survives local appliance failure (§4.7).</li>
         <li>Trust-safety notice response; origin removal when a pull requires it.</li>
         <li>Correct payout setup; understand pending vs available vs reversed.</li>
         <li>Fund multi-ISP delivery budgets explicitly if used.</li>
@@ -1027,9 +1086,74 @@
         <li>Explainable eCPMv (earnings per thousand paid views).</li>
         <li>Notice SLA met; low reverse rate.</li>
       </ul>
+      <h3 id="turnkey-appliance">6.10 Turnkey creator appliance</h3>
+      <p><strong>Product requirement:</strong> a nontechnical creator can turn a supported old PC or small single-board computer into a creator-owned video appliance through an installer or prebuilt image and a browser-based setup wizard. The appliance manages CEA, local storage, publishing, and the selected Key Agent mode; creators should not need to configure S3, certificates, containers, or command-line services to publish.</p>
+      <h4>Supported hardware and installation</h4>
+      <table>
+        <thead><tr><th>Profile</th><th>Design target</th><th>Release requirement</th></tr></thead>
+        <tbody>
+          <tr><td>Existing PC / mini-PC</td><td>64-bit x86 device with supported local disk and network adapter; guided installer or dedicated appliance image</td><td>Publish tested CPU/RAM/free-space requirements, OS versions, and separate limits for serving and transcoding</td></tr>
+          <tr><td>Small ARM appliance</td><td>Selected 64-bit Raspberry Pi-class boards with supported power supply, boot media, and USB/SSD library storage</td><td>Publish exact supported board models/revisions, memory, storage, and image versions; do not claim support for every ARM board</td></tr>
+          <tr><td>Network and storage</td><td>Wired Ethernet recommended; supported Wi-Fi permitted after a connectivity check; creator-selectable library disk</td><td>Measure usable upload, storage health/capacity, sustained reads/writes, and a representative encode; show realistic concurrency and processing estimates</td></tr>
+        </tbody>
+      </table>
+      <p>These are support targets, not certified hardware or benchmark results. A release must ship a versioned support matrix and reject unsupported configurations with a plain-language explanation. Low-powered devices may serve pre-encoded content; offer a supported desktop preparation path or explicitly authorized external transcoding rather than promising real-time 4K encoding on every board.</p>
+      <ul>
+        <li><strong>Safe installer/image:</strong> signed downloads and checksums; guided target-disk selection and explicit confirmation before formatting or overwriting. Preserve existing user files by default; offer a non-destructive install where supported. Never silently repartition an old PC or reuse a library disk as boot media.</li>
+        <li><strong>First-run wizard:</strong> discover the appliance locally, establish secure authenticated administration through physical/local pairing, choose storage, create or recover creator identity, verify an encrypted recovery backup, connect the publisher-operated cloud backup instance (§4.7), test media/unlock failover, and select a free or paid publishing template. Explain provider costs before activation; without a ready cloud replica, keep local imports as drafts rather than ready published titles.</li>
+        <li><strong>Publish experience:</strong> upload a video through the browser, edit title/thumbnail/captions and access rules, preview, then publish. Show preparation progress, resumable failure handling, readiness checks, and an externally usable watch link. Initial setup does not require monetization or a funded delivery budget.</li>
+      </ul>
+      <h4>Connectivity and availability fallback</h4>
+      <ul>
+        <li><strong>Probe before claiming online:</strong> test local access and independent off-network media and Key Agent reachability. Detect changing public IP, carrier-grade NAT, blocked inbound ports, certificate failures, and inadequate upload; dynamic DNS alone is not a reachability solution.</li>
+        <li><strong>Direct mode:</strong> automate supported address updates and TLS issuance/renewal. Router changes or port mapping require explicit permission; never expose the administrative interface to the public internet by default.</li>
+        <li><strong>Fallback:</strong> use the required publisher-operated cloud backup origin for local outages (§4.7). An optional outbound authenticated tunnel can additionally make a live local appliance reachable behind NAT, but never substitutes for the cloud copy. Disclose providers, availability, bandwidth caps, and cost; no silent billable fallback. A ciphertext-only media relay receives no content keys and is not the CDF metadata broker.</li>
+        <li><strong>Honest degradation:</strong> show local-origin, cloud-origin, replication, and unlock health separately. Fail over automatically when the local appliance is unplugged; if cloud media or the independent key path is also unavailable, warn or pause new unavailable paid offers and show actionable recovery. Replication cannot guarantee uninterrupted service through every failure.</li>
+      </ul>
+      <h4>Updates, administration, and recovery</h4>
+      <ul>
+        <li><strong>Updates:</strong> verify signed release metadata and artifacts, stage updates, check disk space and compatibility, and apply in a disclosed maintenance window with security-update notices. Back up state before migrations; test interrupted power/network and provide a known-good recovery path. Roll back only across compatible state versions; do not silently downgrade to known-vulnerable software.</li>
+        <li><strong>Administration:</strong> unique credentials or passkey enrollment, least-privilege services, health/storage/update alerts, and redacted opt-in diagnostic exports. Remote administration is explicitly enabled and authenticated, not an open dashboard.</li>
+        <li><strong>Recovery:</strong> guide encrypted backup/export of creator identity, media-key envelopes, analytics keys if enabled, manifests, policies, and configuration to creator-selected storage. Keep recovery secrets outside the appliance and test restoration. Configuration/key backup is not a video-library backup; maintain the required serving cloud replica plus a separate versioned recovery-copy policy (§4.7).</li>
+        <li><strong>Replacement device:</strong> restore onto a supported replacement, verify library integrity and ownership, revoke the lost appliance's device/delegation credentials, rebind endpoints, and preserve title identities where possible. Prevent concurrent stale instances from publishing conflicting updates. Lost keys without a valid creator recovery mechanism are not recoverable through a CDF password reset.</li>
+      </ul>
+      <h4>Nontechnical first-publish acceptance test</h4>
+      <ol>
+        <li>A participant who does not administer servers starts with a supported blank appliance device or a supported PC containing unrelated files, and follows only the supplied installer/image instructions and wizard. No shell, manual certificate work, or engineer intervention is permitted.</li>
+        <li>The participant pairs the browser, selects library storage, connects their cloud backup instance with disclosed costs, completes recovery and replication checks, imports a supplied short reference clip, chooses a free unlock template, and publishes a title with a thumbnail only after cloud readiness is verified.</li>
+        <li>A separate viewer on an external connection discovers or opens the watch link, fulfills the chosen requirement, and plays the encrypted video to completion. Neither a same-LAN-only test nor preview-only playback counts as success.</li>
+        <li>Repeat on a direct connection and a simulated carrier-grade-NAT/blocked-inbound connection, then unplug the local appliance with peers/edges disabled. Existing playback and a fresh unlock must work from the publisher cloud path without terminal commands. Declining cloud costs incurs no charge and leaves the import as a draft, not a ready published title.</li>
+        <li>After reboot, confirm persistent identity, catalog, and playback. Exercise a failed/interrupted update and restore onto a replacement device using the recovery kit; confirm unrelated files survive installation and keys remain outside operator custody.</li>
+      </ol>
+      <p>Record unassisted completion rate, active setup time separately from image downloads and encoding, external playback success, fallback cost disclosure, and restore success for each supported profile. Publish the test conditions and pass thresholds before release; a supported profile must pass the functional steps above. No measured usability or performance result is claimed by this design.</p>
+      <h3 id="publisher-pages">6.11 Publisher pages, highlighted videos, and owned feedback forums</h3>
+      <p><strong>Every video publisher has a public home, comparable in purpose to a YouTube channel, but defined by the publisher.</strong> The publisher chooses its content, presentation, highlighted videos, and community rules. CDF indexes the page and its eligible public content; it does not take editorial ownership of the page or forum.</p>
+      <ul>
+        <li><strong>Page content:</strong> publisher name, verified identity reference, banner/avatar, about text, announcements, public links, video library, and ordered collections. Use a guided editor and constrained templates; page ownership is not permission to run arbitrary scripts, tracking pixels, or unsafe embeds.</li>
+        <li><strong>Publisher-picked highlights:</strong> choose featured/pinned videos, an introduction, topic shelves, and their order. Clearly label external recommendations and link to the original publisher/offer. The platform must not substitute paid placements or its own recommendations inside publisher-authored highlights. Featuring a title never bypasses its access rules or safety status.</li>
+        <li><strong>Human niche curation:</strong> market these pages as a home for expertise and personally selected work, with attributed collections and selection notes. Publishers may use editorial tools, but automated selections must be disclosed; do not claim all collections are human-selected. Viewers can separately ask their own AI agent to organize discovery (§4.8).</li>
+        <li><strong>Feedback forum:</strong> publisher operates the community space, optionally enabled, with publisher-level and video-linked topics, replies, pinned guidance, and moderation tools. They set posting/join rules, choose moderators, and can lock, hide, remove, or archive discussions under disclosed rules. A page may show public highlights while keeping its forum members-only; a paid video unlock alone grants no undisclosed forum access.</li>
+        <li><strong>Ownership means stewardship and portability:</strong> publisher controls forum hosting, configuration, moderation, and lawful export/migration. Contributors retain rights to their own posts subject to disclosed terms; publisher ownership does not mean owning members' identities or unrestricted rights to sell their data. Support author edit/delete requests and applicable privacy/retention duties.</li>
+        <li><strong>Publisher hosting and continuity:</strong> page versions and forum data live under publisher control with cloud continuity (§4.7). Page assets can be replicated like static content; forum writes need an authoritative writer, transactional backup/replay, and fenced failover to prevent split-brain, duplicate posts, or resurrection of deleted content. Show read-only mode during uncertain recovery rather than accepting conflicting writes.</li>
+        <li><strong>Safety and privacy:</strong> sanitize posts/links, rate-limit posting, challenge spam, and provide member block/report and moderator audit trails with scoped roles. Apply network/legal reporting obligations (§15); ordinary forum disagreement is not automatically a network strike. Public post/profile visibility is explicit and separate from private viewer analytics; do not expose watch histories to forum moderators or AI agents.</li>
+        <li><strong>Indexing and consent:</strong> publish only the approved public page/collection metadata and explicitly public, indexing-enabled forum material to discovery. Private threads, member lists, credentials, and moderation logs are not public metadata. Page/forum notices are not injected video overlays; any overlay remains subject to both parties' prior consent.</li>
+      </ul>
+      <p><strong>MVP acceptance:</strong> a publisher edits and publishes their page, orders featured videos, opens a forum topic, delegates a scoped moderator, and exports/reimports page/forum data with authorship and access controls preserved. Verify another publisher cannot edit it, the platform cannot silently reorder publisher highlights, private discussions remain out of search/agent reads, and cloud failover does not lose acknowledged posts or undo deletions. This defines the feature, not an implemented channel service.</p>
+      <h3 id="recommendation-publishing">6.12 Viewers become publishers when sharing recommendations</h3>
+      <p>A viewer who wants to recommend content to another viewer uses their own publishing setup, <strong>local to them or in their chosen cloud account</strong>. The recommendation is a signed record from that user, not an anonymous platform message, an automatic endorsement by the original video creator, or a transfer of viewing keys.</p>
+      <ul>
+        <li><strong>Lightweight publishing mode:</strong> create/reuse a publisher identity and operate a small endpoint/feed for recommendations, reviews, and collections. A local client/appliance may publish while reachable; a cloud instance may host the same records without requiring an always-on home PC. Show reachability, queued delivery, and failed sends honestly. No media transcoder, video bucket, payout wallet, or Key Agent is needed just to recommend a title.</li>
+        <li><strong>Scope of infrastructure:</strong> the mandatory cloud media replica (§4.7) applies to locally originated videos, not metadata-only recommendations. If this publisher later hosts media, the normal origin/backup/key obligations apply. A local-only recommendation source may be unavailable while offline; do not represent central indexing as permanent hosting of its private feed.</li>
+        <li><strong>Recommendation record:</strong> signed sender identity, original publisher/title id and optional version, comment/review or selection reason, timestamp/expiry, revision, intended audience, and canonical content location. Recommend the source title; do not rehost another creator's media or publish secret fetch/grant URLs.</li>
+        <li><strong>Recipient control:</strong> private recommendations go only to addressed recipients or an approved audience and are not placed in a public index. Known senders can appear in the recipient's trusted recommendation inbox; unknown invitations remain hidden/quarantined until explicitly inspected. Trust in the recommender does not automatically trust the original publisher or enable that publisher's full catalog.</li>
+        <li><strong>Provenance:</strong> preserve the original video publisher and each recommending publisher as distinct identities. Carry human/agent assistance labels and source references without exposing a private forwarding chain. Paid/sponsored endorsements disclose their relationship; neither endorsement counts nor central popularity override local trust.</li>
+        <li><strong>Trust decision:</strong> the recipient or their explicitly authorized policy accepts a recommendation, then separately trusts the original publisher or approves a named title for one-time inspection. No unsolicited preview/autoplay, purchase, or publisher-wide subscription is implied by receipt.</li>
+        <li><strong>Separate from gifts:</strong> a recommendation is free to publish apart from hosting costs. Attaching a purchased gift uses §9.13 entitlements, normal recipient consent, and new grants. A gift does not buy attention, trust-list placement, or a recommendation notification that bypasses sender blocks.</li>
+      </ul>
+      <p><strong>Acceptance:</strong> user A publishes a signed recommendation from local mode and then cloud mode; user B receives it under their own trust policy, inspects provenance, and accepts or blocks it. Verify offline queuing, audience isolation, signature/replay checks, no automatic trust of the original publisher, and no copied media keys. Independent review publishing remains possible even when the video's publisher does not feature that review.</p>
       <div class="callout">
         <strong>One-liner:</strong>
-        Content creators host and gate video on xjet-swarma-video and expect transparent, near-real-time micropayment when viewers watch—while keeping files, keys, and pricing power.
+        Content creators host and gate video on xjet-swarma-video and expect transparent, near-real-time micropayment when viewers watch—while keeping files, keys, pricing power, and their own public page and community.
       </div>
     </section>
 
@@ -1061,7 +1185,7 @@
       <h3>7.3 Packaging principles</h3>
       <ul>
         <li>GOP/segment alignment across ABR rungs preferred for seamless switching.</li>
-        <li>Encrypt media payload per segment; packaging may resemble fMP4/CMAF-style objects without requiring a single vendor DRM.</li>
+        <li>Use HLS playlists over aligned media segments, targeting fMP4/CMAF packaging with a validated HLS encryption profile; no mandatory vendor DRM. WebTorrent transports the same ciphertext as HTTPS (§7.7).</li>
         <li>Client selects rendition by bandwidth/device; KeyGrants authorize segment ids (and optionally rendition families) not raw bitrates alone.</li>
         <li>Captions: default path supports hard-of-hearing; encryption optional so edges can cache accessibility tracks aggressively when public.</li>
       </ul>
@@ -1071,7 +1195,7 @@
         <li>Segment duration short enough for latency targets; Key Agent autoscaling or delegated mode strongly recommended.</li>
         <li>Attestation may unlock a <em>time window</em> (“next 2 hours of this live uid”) rather than thousands of individual pre-grants.</li>
         <li>Late join and DVR: Policy states how far back keys are available.</li>
-        <li>Chat/social interaction is out of band unless added as a separate product surface.</li>
+        <li>Publisher feedback forums (§6.11) are a separate page/community surface; real-time live chat remains out of scope unless explicitly added.</li>
       </ul>
 
       <h3>7.5 Versioning and updates</h3>
@@ -1093,6 +1217,31 @@
         <li><strong>Operational boundaries:</strong> captions, requested accessibility features, essential player controls, and required safety/legal notices are not optional commercial overlays. Do not label promotions as operational notices or quality questions to evade consent.</li>
         <li><strong>Acceptance checks:</strong> test all four creator/viewer consent combinations; only both-enabled displays optional overlays. Also test revocation during playback, changed scope, absent consent offline, gift redemption without consent, and cache attempts to inject unsigned overlays.</li>
       </ul>
+      <h3 id="webtorrent-hls">7.7 WebTorrent / HLS delivery basis</h3>
+      <p><strong>Technology direction:</strong> build on HLS (HTTP Live Streaming) for adaptive media presentation and HTTPS delivery, with WebTorrent-based WebRTC peer assistance for reusable encrypted segments. HLS describes the stream; WebTorrent supplies an additional delivery path. Neither replaces creator Policy, Attestations, KeyGrants, or the separate delivery ledger.</p>
+      <h4>Packaging and player integration</h4>
+      <ul>
+        <li><strong>One media representation:</strong> CEA produces HLS multivariant and media playlists, aligned rendition segments, audio/caption tracks, and initialization objects where required. A creator-signed manifest binds playlist versions, segment identities, ciphertext checksums, key ids, and the peer transport mapping. Serve playlists and objects over HTTPS with appropriate CORS and range support.</li>
+        <li><strong>Reference player:</strong> use HLS.js on compatible MSE/Managed Media Source browsers with a segment-delivery adapter. Evaluate WebTorrent-compatible HLS integration such as P2P Media Loader rather than assuming a raw WebTorrent client can consume an HLS playlist directly. Using WebTorrent signaling alone does not establish generic BitTorrent wire compatibility; pin and test the chosen engine/protocol.</li>
+        <li><strong>Startup and fallback:</strong> start using HTTPS while peer discovery proceeds; use peers only when they can meet playback deadlines. Missing pieces, corrupt segments, tracker failure, peer disconnects, or disabled WebRTC fall back to HTTP without changing unlock policy or charging a second view.</li>
+        <li><strong>Native HLS:</strong> permit native playback only where the selected encryption/key adapter preserves access controls. Native HLS does not automatically support our wrapped KeyGrants or JavaScript peer loader; certify each browser/device path, use tested HTTP-only playback where appropriate, and report unsupported combinations instead of silently publishing clear media.</li>
+      </ul>
+      <h4>Ciphertext and key boundaries</h4>
+      <ul>
+        <li><strong>Identical shareable bytes:</strong> origin, peers, and edges deliver the same encrypted object for a given title version/rendition/segment. Viewer binding wraps authorization and keys, not a different ciphertext copy per viewer. Per-viewer re-encryption or byte-changing watermarking requires separate swarms or disabling P2P for that representation.</li>
+        <li><strong>Key path:</strong> key loading is separate from the peer segment loader and checks Policy, funding, quota, and KeyGrant scope. Never place plaintext keys, wrapped viewer grants, payment proofs, or analytics payloads in shared playlists, torrents, trackers, or peer caches. Any HLS key URI is an authorized key-service reference, not a public origin key file; key responses must not enter shared caches.</li>
+        <li><strong>Encryption profile gate:</strong> select and test the HLS method, container, key rotation, IV/nonce rules, and client adapter together. HLS AES-128 full-segment encryption is a candidate, not a substitute for the existing wrapped-grant protocol. Do not label arbitrary encrypted blobs or unsupported SAMPLE-AES/container combinations as interoperable HLS. Authenticate ciphertext against the creator-signed digest before accepting peer bytes for decryption.</li>
+      </ul>
+      <h4>Swarm operations and viewer choice</h4>
+      <ul>
+        <li><strong>Stable identity:</strong> derive swarm/segment identities from signed title/version/rendition/object mappings, never viewer ids or expiring presigned URLs. For torrent-based engines bind infohash, file/piece ranges, and checksums; for manifest-driven engines bind the equivalent sequence/range mapping. Live uses bounded rolling segment windows, not a mutable whole-stream torrent.</li>
+        <li><strong>Compatible seeds:</strong> browser peers require WebRTC-capable counterparts. Appliance/edge seed support must explicitly match the chosen engine; a TCP/uTP-only BitTorrent client cannot directly seed browser WebTorrent peers. Until compatibility is verified, the appliance remains a valid HLS HTTPS origin.</li>
+        <li><strong>Discovery:</strong> production uses selected operated or contracted WebTorrent-compatible WSS trackers and STUN services, not an implicit dependency on public test trackers. Trackers exchange signaling, not video keys. Peer connectivity failure uses HTTP; any TURN relay is an explicit costed option, not a requirement for ordinary playback or a solution to origin availability.</li>
+        <li><strong>Privacy and resources:</strong> disclose that peers can learn network addresses and swarm membership even when media is encrypted. Offer HTTP-only viewing and explicit peer-sharing controls, upload/memory/disk caps, and metered/mobile restrictions. Do not send playback analytics or stable account identifiers to trackers. Overlay consent is not consent to contribute bandwidth.</li>
+        <li><strong>Existing enforcement:</strong> creator cache permissions, fill leases for participating edges, blocklists, and purge directives govern this transport too. Stop compliant seeding on removal; do not promise deletion from hostile peers. Peer byte counts are not independent Proof of Delivery or evidence of a human view.</li>
+      </ul>
+      <p><strong>Acceptance gate:</strong> demonstrate encrypted HLS HTTP-only playback first, then two compatible peers exchanging verified ciphertext with seek, ABR, captions, key rotation/expiry, and no double billing. Test absent/hostile peers, tracker loss, blocked WebRTC, no-sharing mode, revoked grants, and browser/native HLS compatibility. Measure origin bytes and rebuffering rather than assuming peer savings; dependency versions, codec/encryption profiles, and appliance seed compatibility remain release-tested choices.</p>
+      <p>Technical references: <a href="https://webtorrent.io/faq/">WebTorrent FAQ</a>, <a href="https://github.com/video-dev/hls.js">HLS.js</a>, and <a href="https://github.com/Novage/p2p-media-loader">P2P Media Loader</a>. These establish the integration direction, not a claim that this repository already implements it.</p>
     </section>
 <section id="s8">
       <h2>8) Requirements and attestations (access path)</h2>
@@ -1321,7 +1470,7 @@
       </ul>
 
       <h3>9.13 Gifted views — “userxyz bought you a view”</h3>
-      <p>A viewer may recommend a title and purchase a <strong>gift entitlement</strong> for another viewer. Recommendations alone remain free; a paid gift adds creator-defined access. This is entitlement gifting, <strong>not transfer of content keys</strong> or a general-purpose messaging feature.</p>
+      <p>A viewer may recommend a title through their own local/cloud publishing setup (§6.12) and purchase a <strong>gift entitlement</strong> for another viewer. Recommendations alone remain free apart from hosting costs; a paid gift adds creator-defined access. This is entitlement gifting, <strong>not transfer of content keys</strong>, trust-list placement, or a general-purpose messaging feature.</p>
       <ol>
         <li><strong>Purchase:</strong> sender selects a creator-enabled gift offer for a title, with explicit scope and total cost: one view, a fixed access window, or a capped playback allowance. The payment rail routes access value to the creator; delivery settlement remains separate.</li>
         <li><strong>Address:</strong> gift targets a recipient account or an unguessable, single-use claim link when the recipient is unknown. Link possession authorizes claiming an untargeted gift; targeted gifts additionally require the intended account. Bearer tokens must not appear in analytics, referrers, or ordinary logs.</li>
@@ -1486,6 +1635,31 @@
         <li>Escrow/prepaid for pin and bounty windows so edges are not stranded after warm-up.</li>
         <li>Barriers (trust/stake) before junk titles enter paid prefetch pools.</li>
       </ul>
+      <h3 id="trusted-peer-exchange">11.11 Trusted-peer video asset exchange and compensation</h3>
+      <p><strong>A publisher's videos are assets.</strong> The publisher can authorize trusted peers to transfer, hold, or serve a specific asset for agreed compensation. This is a controlled asset-distribution transaction, not an unsolicited download or an automatic claim on viewer payments. Viewer trust for recommendations (§12.7), operator trust for custody/delivery, and ownership/licensing rights are separate decisions.</p>
+      <h4>Asset identity and integrity</h4>
+      <ul>
+        <li><strong>Signed asset manifest:</strong> bind publisher identity, asset/title id, immutable version, renditions/tracks, ordered file/segment inventory, sizes, key ids, and cryptographic digests (SHA-256 or a specified approved equivalent). Bind per-chunk hashes or a Merkle root for resumable transfer plus whole-object hashes and a package root covering inventory/order. An unsigned hash supplied by the sending peer is not authoritative.</li>
+        <li><strong>Exact content:</strong> peers exchange the publisher's immutable ciphertext plus authorized manifests and assets, using the same bytes as origin/HLS delivery. Source and destination verify against the publisher-signed expected digest; filenames, matching lengths, and a matching title are insufficient. A re-encode, re-encryption, changed caption, or metadata/package edit creates a new version/root and cannot silently replace the contracted asset.</li>
+        <li><strong>What a match proves:</strong> a verified cryptographic hash establishes byte identity with the signed reference, not that a caption is truthful, that a peer owns copyright, or that ciphertext depicts what its title claims. Publisher-side packaging validates clear-source-to-encrypted-output mapping; any rights/content inspection needs separately authorized access, never routine plaintext disclosure to caches.</li>
+      </ul>
+      <h4>Trade agreement and transfer flow</h4>
+      <ol>
+        <li><strong>Authorize the counterparties:</strong> publisher selects source/destination operator identities or scoped delegated operators. Both peers accept the relationship and authenticate control of their keys; no transitive trust merely because they share a tracker, viewer, ASN, or recommendation source.</li>
+        <li><strong>Agree the contract:</strong> sign a unique contract/order id binding the asset root/version, payer/payee, source/destination, transfer or hosting rights, permitted onward distribution, price/asset/currency, byte/storage caps, retention/availability term, expiry, and rejection/dispute rules. Identify whether compensation buys verified transfer, continuing storage/serving, or an explicitly licensed right. Hosting or copying alone does not sell copyright, exclusivity, or viewer unlock authority.</li>
+        <li><strong>Reserve funding and capacity:</strong> verify destination free space and bounded transfer budget, reserve funds through the agreed rail or optional disclosed delivery escrow, and obtain a fill lease when applicable (§5). No uncapped payment for duplicate cold copies; count a contracted completion once, and deduplicate overlapping fill/transfer claims unless the contract explicitly buys separate work.</li>
+        <li><strong>Move and verify:</strong> use authenticated HTTPS/range transfer or the validated WebTorrent-compatible transport (§7.7), with short-lived scoped fetch authorization. Stage partial data, check chunks, resume only against the same root, and verify the full required inventory before marking it complete. Reject/quarantine corrupt bytes and retry a permitted donor; never advertise partial or mismatched assets as complete.</li>
+        <li><strong>Acknowledge:</strong> receiver signs a receipt binding contract id, asset root, source/destination identities, accepted inventory/bytes, and completion time. Persist the verified asset before acknowledging durability; submit a signed HAVE/location advertisement only for authorized verified content. A later storage/uptime payment requires ongoing probes or retention evidence, not merely this one receipt.</li>
+        <li><strong>Settle:</strong> match authorization, reserved budget, verified completion evidence, and contract conditions; append an idempotent delivery/asset-transfer ledger event. Release compensation or enter the agreed hold/dispute path. Partial transfers are unpaid unless priced explicitly; refund/expiry behavior is disclosed. Receipts are evidence, not a guarantee against colluding peers or a promise of trustless atomic exchange.</li>
+      </ol>
+      <h4>Rights, privacy, and operational safeguards</h4>
+      <ul>
+        <li><strong>Publisher control:</strong> ordinary peers get ciphertext, not creator master keys, grant-signing authority, private analytics, forum member records, or unrelated library access. A publisher's cloud instance may separately run a scoped Key Agent (§4.7/§10); that authority is not conferred by an asset-transfer contract.</li>
+        <li><strong>Separate economics:</strong> transfer, storage, and delivery compensation uses the explicitly funded asset/delivery ledger. Never silently skim per-view earnings or pay recommendation counts as if they proved delivery. Any sale/license of rights needs its own agreement and rights records; moving verified bytes is not that agreement.</li>
+        <li><strong>Private counterparties:</strong> share contract terms and receipts only with authorized parties and necessary settlement services. Public location records expose only approved serving information; do not publish trust relationships, secret endpoints/tokens, or private commercial terms to the discovery library.</li>
+        <li><strong>Revocation and recovery:</strong> expired/revoked transfer rights stop new fetches and onward offers; blocked content cannot initiate new paid distribution. Handle retained copies, required deletion/restriction, and claims according to the contract and legal duties. Short TTLs do not remotely erase already received bytes. On peer failure, reconcile receipts and funds before retrying another paid order.</li>
+      </ul>
+      <p><strong>Acceptance:</strong> complete and settle a publisher-authorized transfer between two trusted peers; confirm signed manifest/root and received bytes match. Reject an unauthorized peer, forged manifest, one-byte corruption, omitted/reordered segments, wrong version, and a replayed receipt. Verify interrupted resume, duplicate-claim prevention, capped spending, disk-full handling, dishonest receiver disputes, and that no public metadata or ciphertext-only peer receives content keys. An agreed implementation must measure throughput and settle through real tested rails before claiming this market works.</p>
     </section>
 
     <div class="part-banner" id="part-c-—-viewer-experience">
@@ -1502,7 +1676,7 @@
       <h2>Viewer journey (discover to watch to report)</h2>
       <p>This is the viewer-facing path. System internals stay out of the way unless something breaks.</p>
       <ol>
-        <li><strong>Arrive</strong> — localized catalog/search; clear titles, previews, warnings. <a href="#s14">§14</a>, <a href="#s4">§4.3</a></li>
+        <li><strong>Find and trust publishers</strong> — arrive via any chosen link, community, directory, or recommendation; explicitly review publisher identity and build a local catalog. Untrusted publishers do not populate the normal feed or autoplay. <a href="#local-catalog">§12.7</a></li>
         <li><strong>Device identity</strong> — ephemeral or recoverable keypair; multi-device if signed in. <a href="#s12">§12</a></li>
         <li><strong>Preview</strong> — free intro/trailer when Policy allows (may already be edge-cached). <a href="#s13">§13.2</a>, <a href="#s7">§7</a></li>
         <li><strong>Choose unlock path</strong> — free (goodwill, puzzle, email, social, ad, …) <em>or</em> paid with an upfront meter (“~$0.02 to start · cap $0.15”). <a href="#s8">§8</a>, <a href="#s9">§9.8</a></li>
@@ -1510,6 +1684,7 @@
         <li><strong>Play</strong> — KeyGrants roll forward; ABR + captions; bytes from edge, swarm, or origin. <a href="#s13">§13.4</a>, <a href="#s7">§7</a></li>
         <li><strong>Session spend</strong> — running total on paid paths; stop raises stop new grants after a short grace. <a href="#s9">§9</a></li>
         <li><strong>Report</strong> — spam, unlawful, misleading unlock, etc.; personal “hide” is not a network strike. <a href="#s15">§15</a></li>
+        <li><strong>Share a recommendation</strong> — use your own local or cloud publisher setup; the recipient decides whether to inspect the recommendation and trust its sources. <a href="#recommendation-publishing">§6.12</a></li>
         <li><strong>Daily watch quota</strong> — at most 48 hours of content timeline per day per account (shared devices); soft warnings then KeyGrants stop. <a href="#s16">§16</a></li>
       </ol>
       <div class="callout">
@@ -1566,15 +1741,28 @@
         <li>Playback analytics use creator-scoped viewer pseudonyms, not global account identifiers. Per-viewer detail is creator-private (§20.1); a pseudonym alone does not anonymize a behavioral history. Global advertising profiles are a non-goal.</li>
         <li>Age and jurisdiction signals: prefer local client declarations + creator Policy over central dossiers.</li>
       </ul>
+      <h3 id="local-catalog">12.7 Viewer-owned local catalogs, publisher trust, and reviewing agents</h3>
+      <p><strong>The ordinary viewing catalog is local and trust-gated.</strong> AI can generate unlimited uploads or metadata without earning a place in a viewer's feed. The viewer chooses publisher identities and recommendation sources; central indexes supply shared records, not compulsory attention. This is an attention-control model, not a guarantee that trusted content is truthful or that spam no longer costs infrastructure resources.</p>
+      <ul>
+        <li><strong>Local ownership:</strong> store selected publisher keys/endpoints, trust/block decisions, catalog entries, collections, and agent review notes in viewer-controlled local storage. Permit export/import and optional encrypted sync/backup to a viewer-chosen destination; never upload the trust graph or catalog history as a default central profile.</li>
+        <li><strong>Many discovery routes:</strong> publishers can be found through direct links, websites, real-world contacts, forums, external search, signed recommendations, or centralized metadata libraries. No single directory is the exclusive enrollment path. Direct import still verifies identity and does not bypass network safety/access constraints.</li>
+        <li><strong>Default visibility:</strong> normal browsing, notifications, previews, and autoplay use trusted publisher sources only. Put unknown identities in a separate discovery or invitation-review mode that the viewer must request. An empty catalog starts with an explicit choice of sources, not a silently subscribed platform list; suggested starter lists are opt-in and identify their curator.</li>
+        <li><strong>Scoped trust:</strong> let viewers trust media publishers and recommendation/review publishers separately, by topic or named title where appropriate. Receiving a trusted person's recommendation does not transitively trust its target. Trust is personal, revocable, and distinct from identity verification, verifier scores for unlock, community moderation, or a platform badge.</li>
+        <li><strong>Agent review:</strong> viewer-selected local agents can review permitted shared descriptions, closed captions, reviews, and already-authorized media, then annotate/rank within the viewer's rules. A remote agent requires explicit disclosure and authorization for any viewer-owned data sent to it. Do not buy media access, release secrets, run downloaded code, subscribe to publishers, or lift trust restrictions merely because source content asks an agent to do so; treat captions/reviews as untrusted data, not instructions.</li>
+        <li><strong>Explainability:</strong> show why a title is present, the original publisher, recommending/reviewing identities, source versions, human/agent provenance, and review limits. Missing captions or incomplete inspection must be visible; neither a shared review nor an agent summary proves the video matches its description.</li>
+        <li><strong>Revocation and freshness:</strong> removing/blocking a publisher stops new imports and normal presentation; undo inherited suggestions without deleting unrelated user data. Retain audit/history only under viewer settings. Handle signing-key changes with authenticated continuity or renewed approval, not trust in a reused display name; propagate title withdrawal independently of publisher trust.</li>
+        <li><strong>Flood resistance:</strong> bound per-source imports, agent work, caption size, notifications, and local disk use; deduplicate records and quarantine abnormal bursts even from trusted publishers. Central ingestion still needs publisher authentication, quotas, abuse detection, and resource limits. A compromised trusted source can still abuse earned attention, so provide fast mute/revoke/report controls.</li>
+      </ul>
+      <p><strong>Acceptance:</strong> flood the shared index with untrusted publishers and confirm no change to the ordinary feed, notifications, or autoplay. Verify explicit new-publisher inspection, trusted-source import, a recommendation that does not grant transitive trust, malicious caption instructions ignored by the agent, trust revocation/key rotation, bounded trusted-source floods, and local export/restore without disclosure of the private trust graph.</p>
     </section>
 <section id="s13">
       <h2>13) End-to-end flows</h2>
 
       <h3>13.1 Publish</h3>
-      <p>CEA segments → encrypts → uploads → registers metadata, access Policy, optional delivery Policy → optional seed → optional pin/prefetch declarations.</p>
+      <p>CEA segments → encrypts → uploads to local and publisher-operated cloud origins → verifies complete cloud copy and independent unlock health → registers ready metadata, access Policy, optional delivery Policy → optional seed → optional pin/prefetch declarations. Incomplete replication remains a draft (§4.7).</p>
 
       <h3>13.2 Discover and preview</h3>
-      <p>Viewer browses CDF catalog; plays preview/intro per Policy (keyless or pre-authorized). Bytes may come from origin, swarm, or edge ciphertext caches.</p>
+      <p>Viewer finds publishers through chosen routes, approves identities or a named-title inspection, and browses their trust-filtered local catalog. Authorized agents review publisher-shared metadata/captions/reviews. Preview/intro plays only on an allowed path per Policy (keyless or pre-authorized); bytes may come from local/cloud origin, swarm, or edge caches (§12.7).</p>
 
       <h3>13.3 Fulfill requirements</h3>
       <p>Viewer picks a path; verifiers issue Attestations; publisher-defined strictness applies. No credit-card-centric funnel required.</p>
@@ -2060,6 +2248,13 @@
       <h2>22) Data model (conceptual)</h2>
       <ul>
         <li><strong>Creator:</strong> ids, public keys, payout endpoints for <em>access</em> crypto (non-custodial), verifier allow/deny lists, delivery budgets and pin prefs, locales.</li>
+        <li><strong>PublisherPage / CuratedCollection:</strong> owner/editor identity, stable id, signed version, approved presentation fields, ordered title references, visibility, human/agent selection provenance, and canonical page/forum location (§6.11).</li>
+        <li><strong>LocationAdvertisement:</strong> publisher/title/version scope, origin/replica role, protocol and endpoint reference, signer, health/readiness evidence, last check, and expiry; no secret storage credentials or content keys (§4.8).</li>
+        <li><strong>DiscoveryShare / SharedCaption / SharedReview:</strong> publishing identity, source author/rights, asset/reference, title/version, language, audience, permitted indexing/agent use, publication/revocation version, and selection provenance; store only the assets the publisher lawfully selects for sharing (§4.8).</li>
+        <li><strong>LocalCatalog / TrustRule / AgentReview:</strong> viewer-local publisher identities, trust scopes, imported records and provenance, review outputs and limits, revocation state; not a default centralized user profile (§12.7).</li>
+        <li><strong>Recommendation:</strong> recommending publisher identity and signature, original publisher/title reference, reason/review, human/agent provenance, audience, expiry/revision; recipient acceptance and original-publisher trust remain separate (§6.12).</li>
+        <li><strong>AssetManifest / PeerTransferContract / TransferReceipt:</strong> publisher-signed immutable asset inventory/digests/root; trusted operator identities, scope, rights and onward restrictions; agreed payer/payee, pricing/caps/rail, expiry and dispute terms; signed accepted inventory and idempotent settlement state (§11.11).</li>
+        <li><strong>Forum / Thread / Post:</strong> publisher owner, stable ids, author attribution, access rules, revision/tombstone, moderation state, and replication/writer epoch. Public discovery summaries are separate from private membership, posts, and moderator audit data.</li>
         <li><strong>Title:</strong> uid, manifest, metadata, <strong>access Policy</strong>, <strong>delivery Policy</strong>, preview assets.</li>
         <li><strong>Segment:</strong> guid, size, checksum, storage URLs, encryption envelope refs, privacy-preserving popularity.</li>
         <li><strong>Attestation / KeyGrant:</strong> as in §8.</li>
@@ -2076,6 +2271,7 @@
 
       <h3>23.1 Discovery</h3>
       <p>Catalog search; title metadata; manifest summary; preview policy; localized offer copy.</p>
+      <p>Publisher-selected shared metadata/captions/reviews, page/collection lookup, filtered paginated queries and change feeds for local catalogs/agents, and fresh location resolution (§4.8). Viewer clients apply local trust rules (§12.7); read access never grants trust, posting, key access, payment authority, or private telemetry access.</p>
 
       <h3>23.2 Requirements broker</h3>
       <ul>
@@ -2098,6 +2294,10 @@
         <li>Settlement statements for Delivery Credits / rebates.</li>
         <li>No key material in these APIs.</li>
       </ul>
+      <p>Trusted asset exchange (§11.11): publish/verify signed asset manifests; negotiate and authorize transfer orders; inspect/resume progress; submit signed acceptance receipts; settle/dispute once; register verified HAVE/location only after completion. Separate transport authorization, ownership/licensing records, and payment state.</p>
+      <h3>23.5 Publisher pages and forums</h3>
+      <p>Versioned authorized page edits, ordered featured/collection updates, public page reads, scoped forum membership/posting/moderation, and privacy-aware export/import (§6.11). Separate public metadata lookup from authenticated write/admin endpoints; enforce ownership and thread visibility on every request.</p>
+      <p>Local/cloud publisher endpoints also publish and retrieve signed, audience-scoped recommendation records (§6.12). A recipient's local trust/catalog interfaces remain viewer-owned and are not implicitly exposed as central APIs.</p>
     </section>
 <section id="s24">
       <h2>24) Interoperability contracts (summary)</h2>
@@ -2241,6 +2441,8 @@
         <dt>CEK</dt><dd>Content encryption key for a segment (or small set of segments).</dd>
         <dt>Delegation Grant</dt><dd>Creator authorization for a third-party Key Agent to sign KeyGrants under constraints.</dd>
         <dt>Delivery Credits</dt><dd>Settlement units for edge caching/seeding work; separate from access payments.</dd>
+        <dt>HLS</dt><dd>HTTP Live Streaming: playlist-based adaptive media presentation, used here over HTTPS with creator-controlled encrypted segments.</dd>
+        <dt>WebTorrent</dt><dd>Browser-capable peer delivery using WebRTC; the basis for HLS peer assistance, with engine-specific compatibility verified before release (§7.7).</dd>
         <dt>Key Agent</dt><dd>Service that evaluates Policy and issues KeyGrants; may be local or delegated.</dd>
         <dt>Gift entitlement</dt><dd>Purchased access offered to another viewer and redeemed into recipient-bound KeyGrants; never a transfer of the sender’s decryption keys. Creator-defined scope, normal safety checks, and recipient consent apply.</dd>
         <dt>KeyGrant</dt><dd>Short-lived, viewer/device-bound authorization material to unwrap segment CEKs.</dd>
@@ -2272,8 +2474,9 @@
           <div class="when">Spike / weeks</div>
           <ul>
             <li>Segment encrypt/upload to MinIO/S3; signed metadata schema.</li>
-            <li>Single-node registry + viewer web player (HTTP only).</li>
+            <li>Single-node registry + encrypted HLS web player (HTTPS only initially); validate HLS/container/encryption and KeyGrant adapter compatibility (§7.7).</li>
             <li>One requirement path (goodwill or puzzle) + local Key Agent.</li>
+            <li>Appliance spike (§6.10): candidate hardware measurements, installer/image prototype, off-network probes, direct/relay fallback, and recovery/update failure tests.</li>
           </ul>
         </div>
         <div class="phase">
@@ -2285,6 +2488,10 @@
             <li>Identity: device keypair + optional recoverable account.</li>
             <li>Basic report button → manual admin delist + edge purge stub.</li>
             <li>Creator console: publish, policy, simple analytics.</li>
+            <li>Publisher-owned pages and feedback forums (§6.11): editable public home, ordered highlights, attributed human niche collections, scoped moderation, and export/cloud recovery; metadata/location library interfaces for public discovery and viewer-chosen read-only agent clients (§4.8).</li>
+            <li>Trust-first discovery (§12.7): local catalog/trust rules, explicit unknown-source review, publisher-selected caption/review sharing, agent review controls, and lightweight local/cloud recommendation publishing (§6.12).</li>
+            <li>Publisher cloud backup origin (§4.7): verified pre-publish replication, independent unlock continuity, automatic HLS origin failover/failback, health/cost disclosure, and unplugged-appliance acceptance tests.</li>
+            <li>Turnkey creator appliance (§6.10): release support matrix, signed installer/images, guided storage/identity/recovery setup, disclosed connectivity fallback, secure updates, and passing nontechnical first-publish tests on each supported profile.</li>
             <li>Monetary MVP: penny <code>per_view</code> path, pending/available ledger, live ticker, sweep to creator wallet (prepaid or LN/L2 if ready).</li>
             <li>Gifted views (§9.13): creator-enabled gift offers, funded single-use redemption, recipient-bound grants, consent-based notifications, and disclosed expiry/refund rules. Validate concurrent claims, duplicate payment events, blocked titles, and capped playback before enabling paid gifting.</li>
           </ul>
@@ -2293,7 +2500,7 @@
           <h4>Phase 2 — Scale &amp; resilience</h4>
           <div class="when">Early growth</div>
           <ul>
-            <li>P2P assist; delegated Key Agent mode; health on title pages.</li>
+            <li>WebTorrent/WebRTC-assisted HLS: compatible browser/appliance seeds, operated trackers, sharing controls, verified ciphertext, and reliable HTTPS fallback (§7.7); delegated Key Agent mode and health on title pages.</li>
             <li>Multi-device limits; org roles for creators.</li>
             <li>Moderation queue with S0–S4, trusted flaggers, appeals.</li>
             <li>Block list delta API to clients; strike ladder.</li>
@@ -2304,6 +2511,7 @@
           <div class="when">Partners</div>
           <ul>
             <li>ISP edge registration, PoD, transit-only then rebate budgets.</li>
+            <li>Trusted-peer asset exchange (§11.11): publisher-authorized compensated transfer/hosting contracts, signed checksummed inventories, resumable verification, receipts, and budgeted dispute-aware settlement.</li>
             <li>Multi-ISP model (§5): fill leases, replica targets, diversity bonuses, popular multi-home packages, optional matching pool.</li>
             <li>Live manifests + windowed grants; live-to-VOD finalize.</li>
             <li>Transparency reports; verifier code of practice enforcement.</li>

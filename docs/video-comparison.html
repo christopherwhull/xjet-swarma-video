@@ -77,7 +77,7 @@
 
     <aside class="callout" aria-label="Delivery status">
       <p><strong>Design delivery is not shipped software.</strong> This repository currently contains product and architecture documentation, not an application runtime. Every capability below is a design commitment, partial proposal, or gap—not a verified implementation.</p>
-      <p><strong>Overall:</strong> we retain creator-owned hosting and distributed delivery, but deliberately replace portal-injected advertising with creator-controlled access paths and separate delivery funding. Independent portals and turnkey home-server setup remain important gaps.</p>
+      <p><strong>Overall:</strong> we retain creator-owned hosting and distributed delivery, but deliberately replace portal-injected advertising with creator-controlled access paths and separate delivery funding. Turnkey appliance requirements are now documented; hardware validation and software delivery are still pending. Independent portals remain a design gap.</p>
     </aside>
 
     <section aria-labelledby="comparison-heading">
@@ -111,26 +111,26 @@
             <tr>
               <th scope="row">Use inexpensive existing hardware</th>
               <td class="source">An old PC or Raspberry Pi with a USB drive can host a modest creator catalog.<span class="refs"><a href="https://www.youtube.com/watch?v=eEjYXw3j4pM&amp;t=478">7:58–9:07</a></span></td>
-              <td class="delivery">Open S3-compatible storage, including home/USB-backed nodes; optional local seeding and Key Agent. Cloud or VPS operation is also possible.<span class="refs"><a href="design.html#s2">§2 Open storage</a> · <a href="design.html#s4">§4 CEA and storage</a> · <a href="design.html#s10">§10 Deployment modes</a></span></td>
-              <td class="assessment"><span class="badge partial">Partial</span><p>No supported hardware matrix, ARM appliance image, or measured limits yet. Transcoding capacity and electricity cost must be distinguished from serving pre-encoded files.</p></td>
+              <td class="delivery">PC and selected 64-bit Raspberry Pi-class appliance targets; a versioned support matrix must list exact hardware, OS/image versions, storage requirements, and measured serving/encoding limits.<span class="refs"><a href="design.html#turnkey-appliance">§6.10 Hardware and installation</a> · <a href="design.html#s10">§10 Deployment modes</a></span></td>
+              <td class="assessment"><span class="badge partial">Partial</span><p>Support criteria are documented, but no certified device matrix, downloadable image, or measured limits exist yet. Low-power serving is distinguished from transcoding.</p></td>
             </tr>
             <tr>
               <th scope="row">Turnkey installation for nontechnical creators</th>
               <td class="source">Download an installer or flash an SD card, connect the device, and complete a simple setup wizard.<span class="refs"><a href="https://www.youtube.com/watch?v=eEjYXw3j4pM&amp;t=547">9:07–9:51</a> · <a href="https://www.youtube.com/watch?v=eEjYXw3j4pM&amp;t=833">13:53–14:30</a></span></td>
-              <td class="delivery">The creator journey describes ingest, encryption, upload, and publishing, but not an end-to-end installer or appliance lifecycle.<span class="refs"><a href="design.html#journey-creator">Creator journey</a> · <a href="design.html#s28">§28 Roadmap</a></span></td>
-              <td class="assessment"><span class="badge gap">Gap / deferred</span><p>Specify installation, first-run checks, secure updates, backups, recovery, and a publish-first-video acceptance test.</p></td>
+              <td class="delivery">Signed installer/images, browser pairing and setup, safe disk selection, secure updates, encrypted backup/replacement recovery, and an unassisted first-publish test are explicit MVP requirements.<span class="refs"><a href="design.html#turnkey-appliance">§6.10 Turnkey creator appliance</a> · <a href="design.html#s28">§28 Phases 0–1</a></span></td>
+              <td class="assessment"><span class="badge aligned">Aligned</span><p>The lifecycle is specified at design level, including external full-video playback and failure/recovery checks. Installers, images, and successful user tests have not been delivered.</p></td>
             </tr>
             <tr>
               <th scope="row">Home servers remain reachable</th>
               <td class="source">Use dynamic DNS to find a home server when its public IP changes; automate setup.<span class="refs"><a href="https://www.youtube.com/watch?v=eEjYXw3j4pM&amp;t=547">9:07–9:51</a> · <a href="https://www.youtube.com/watch?v=eEjYXw3j4pM&amp;t=833">13:53–14:30</a></span></td>
-              <td class="delivery">Origin URLs and Key Agent availability modes exist; delegated agents improve unlock availability, not home-origin connectivity.<span class="refs"><a href="design.html#s4">§4 Storage</a> · <a href="design.html#s10">§10 Availability</a></span></td>
-              <td class="assessment"><span class="badge gap">Gap / deferred</span><p>Dynamic DNS does not solve carrier-grade NAT, inbound port blocking, TLS setup, or a powered-off origin. Define connectivity testing and relay/hosted fallback.</p></td>
+              <td class="delivery">Required publisher-operated cloud instance with a verified serving replica before local-origin publication, automatic local-to-cloud failover, independent unlock continuity, and disclosed publisher costs. NAT tunnels are optional connectivity aids, not the backup.<span class="refs"><a href="design.html#cloud-backup-origin">§4.7 Cloud backup origin</a> · <a href="design.html#turnkey-appliance">§6.10 Appliance tests</a></span></td>
+              <td class="assessment"><span class="badge partial">Partial</span><p>Unplugged-local-origin coverage is now a design requirement, tested without peer/edge help. Provider integration, replication and failover measurements remain unimplemented; both-origin failures can still interrupt service.</p></td>
             </tr>
             <tr>
               <th scope="row">A familiar discovery front end</th>
               <td class="source">Viewers should browse and search one portal rather than inspect thousands of individual servers.<span class="refs"><a href="https://www.youtube.com/watch?v=eEjYXw3j4pM&amp;t=591">9:51–10:29</a></span></td>
-              <td class="delivery">CDF content registry, search, browsing, previews, localized offers, and a viewer journey.<span class="refs"><a href="design.html#s4">§4.3 Discovery</a> · <a href="design.html#journey-viewer">Viewer journey</a> · <a href="design.html#s23">§23 APIs</a></span></td>
-              <td class="assessment"><span class="badge aligned">Aligned</span><p>The control-plane concept matches; usability and discovery quality still require a working implementation.</p></td>
+              <td class="delivery">Central libraries hold publisher-selected metadata, captions, reviews, and locations; the viewer discovers sources through any route and browses a trust-gated local catalog with optional agent review.<span class="refs"><a href="design.html#metadata-library">§4.8 Shared library</a> · <a href="design.html#local-catalog">§12.7 Local trust/catalog</a></span></td>
+              <td class="assessment"><span class="badge different">Different approach</span><p>Retains unified discovery information but moves ordinary catalog selection and attention to the viewer, rather than requiring portal/global-feed curation. Implementation and onboarding remain unvalidated.</p></td>
             </tr>
             <tr>
               <th scope="row">Independent competing portals</th>
@@ -141,8 +141,8 @@
             <tr>
               <th scope="row">Human niche curation</th>
               <td class="source">Creators or subject experts can curate portals around interests instead of relying only on an opaque recommendation algorithm.<span class="refs"><a href="https://www.youtube.com/watch?v=eEjYXw3j4pM&amp;t=629">10:29–11:55</a></span></td>
-              <td class="delivery">Search and discovery exist conceptually, but curator permissions, collections, and viewer-selected curators are not defined.<span class="refs"><a href="design.html#s4">§4.3 Catalog</a> · <a href="design.html#s23">§23.1 Discovery</a></span></td>
-              <td class="assessment"><span class="badge gap">Gap / deferred</span><p>Add curator roles, attributed collections, ranking transparency, and conflict-of-interest rules if this is a product commitment.</p></td>
+              <td class="delivery">Publisher-controlled highlights and human niche collections; viewers choose trusted sources locally and can delegate permitted review to their own agents. Users recommending work publish signed references from local or cloud setups.<span class="refs"><a href="design.html#publisher-pages">§6.11 Pages</a> · <a href="design.html#recommendation-publishing">§6.12 Recommendations</a> · <a href="design.html#local-catalog">§12.7 Local choice</a></span></td>
+              <td class="assessment"><span class="badge partial">Partial</span><p>Publisher/curator editorial authority and viewer-agent choice are documented. A marketplace of independently operated multi-publisher portals, conflict-of-interest governance, and implementation remain separate work.</p></td>
             </tr>
             <tr>
               <th scope="row">Creators earn from watching</th>
@@ -165,13 +165,13 @@
             <tr>
               <th scope="row">Popular videos use peer capacity</th>
               <td class="source">Volunteer home servers replicate popular titles and contribute bandwidth when the original creator's connection is insufficient.<span class="refs"><a href="https://www.youtube.com/watch?v=eEjYXw3j4pM&amp;t=870">14:30–15:13</a></span></td>
-              <td class="delivery">Hybrid P2P/HTTP plus ISP and neutral edge ciphertext caches; fill leases, replica targets, and diversity policies protect origins.<span class="refs"><a href="design.html#s5">§5 Multi-ISP model</a> · <a href="design.html#s11">§11 Edge delivery</a> · <a href="design.html#s28">§28 Phases 2–3</a></span></td>
-              <td class="assessment"><span class="badge partial">Partial</span><p>Scaling intent matches. Define ordinary home-node enrollment, resource caps, peer selection, and practical connectivity; no throughput validation yet.</p></td>
+              <td class="delivery">HLS over HTTPS with WebTorrent/WebRTC peer assistance, plus ISP/neutral ciphertext caches. Signed segment mappings and fill leases protect integrity and origin load.<span class="refs"><a href="design.html#webtorrent-hls">§7.7 WebTorrent / HLS basis</a> · <a href="design.html#s5">§5 Multi-ISP model</a> · <a href="design.html#s28">§28 Phases 2–3</a></span></td>
+              <td class="assessment"><span class="badge partial">Partial</span><p>The transport basis, sharing/resource controls, and fallback are specified. Home-node enrollment, engine/seed compatibility, encryption adapters, and measured throughput still need implementation and validation.</p></td>
             </tr>
             <tr>
               <th scope="row">Pay peers for serving others' videos</th>
               <td class="source">A peer receives a smaller percentage of advertising revenue for supplying delivery capacity.<span class="refs"><a href="https://www.youtube.com/watch?v=eEjYXw3j4pM&amp;t=913">15:13–16:07</a></span></td>
-              <td class="delivery">Transit savings and optional funded delivery rebates, pins, diversity bonuses, or seed assistance. Access revenue is not automatically split with caches.<span class="refs"><a href="design.html#s5">§5 Money order</a> · <a href="design.html#s11">§11 Incentives</a></span></td>
+              <td class="delivery">Transit savings and funded delivery incentives, plus publisher-authorized trades for verified asset transfer/hosting between trusted peers, under signed checksum manifests and explicit payment terms. No automatic access-revenue split.<span class="refs"><a href="design.html#s5">§5 Money order</a> · <a href="design.html#trusted-peer-exchange">§11.11 Asset exchange</a></span></td>
               <td class="assessment"><span class="badge different">Different approach</span><p>Compensation is a separate delivery market, not an ad share. A household peer is not promised automatic income; eligibility and fraud-resistant metering remain necessary.</p></td>
             </tr>
             <tr>
@@ -208,9 +208,11 @@
           </thead>
           <tbody>
             <tr><th scope="row">Gifted views</th><td>Single-use purchased entitlements redeemed into recipient-bound grants. <a href="design.html#s9">§9.13</a></td><td>No transfer of sender keys, implied overlay consent, or surprise recipient charges.</td></tr>
+            <tr><th scope="row">Publisher-owned feedback forums</th><td>Channel-like publisher pages with selected highlights, community rules, scoped moderators, and privacy-aware forum export/migration. <a href="design.html#publisher-pages">§6.11</a></td><td>Publisher administration does not override contributors' rights or permit private threads/member data to leak through metadata or agent queries.</td></tr>
             <tr><th scope="row">Creator-private playback analytics</th><td>Central logging of views, skips, speed changes, departures, and managed-link activations; aggregate overview shared with operator. <a href="design.html#s20">§20.1</a></td><td>Detailed payloads encrypted for the relevant creator; creator-controlled rollups. Metadata correlation and client-update trust remain residual risks.</td></tr>
             <tr><th scope="row">Explicit trust-safety process</th><td>Severity-based review, edge purge, creator notices, and appeals. <a href="design.html#s15">§15</a></td><td>Protect against false reports and arbitrary exclusions; network refusal is not remote deletion of every copy.</td></tr>
             <tr><th scope="row">Delegated unlock availability</th><td>Scoped delegated Key Agents, revocation, and optional quorum operation. <a href="design.html#s10">§10</a></td><td>Does not automatically keep origin media online; creator keys and recovery must remain secure.</td></tr>
+            <tr><th scope="row">Publisher-operated cloud backup</th><td>Required warm serving replica for local-origin titles, with verified replication, failover/failback, and a separately available key path. <a href="design.html#cloud-backup-origin">§4.7</a></td><td>Publisher operates and funds the instance; neither CDF nor opportunistic peers substitute for it. Live encoder loss and simultaneous origin failures remain separate risks.</td></tr>
             <tr><th scope="row">Watch quotas and delivery fraud controls</th><td>Account/session quotas, delivery receipts, integrity checks, and capped budgets. <a href="design.html#s16">§16</a> · <a href="design.html#s11">§11</a></td><td>Identity churn, dishonest clients, collusion, and quota races need concrete controls and tests; quotas alone do not prevent restreaming.</td></tr>
           </tbody>
         </table>
@@ -220,11 +222,11 @@
     <section aria-labelledby="priorities-heading">
       <h2 id="priorities-heading">What closes the largest gaps?</h2>
       <ol>
-        <li><strong>Turnkey creator appliance:</strong> supported hardware, installer/image, connectivity fallback, updates, recovery, and a nontechnical first-publish test.</li>
+        <li><strong>Turnkey creator appliance:</strong> requirements now documented in <a href="design.html#turnkey-appliance">§6.10</a> and staged in Phases 0–1; next deliver the support matrix, installer/images, fallback integration, and measured first-publish/recovery results.</li>
         <li><strong>Independent portals:</strong> creator enrollment, publish notifications, human curation, portable audience relationships, and a clear boundary between editorial choice and abuse enforcement.</li>
         <li><strong>Validated economics and delivery:</strong> demonstrate payments, peer/edge incentives, bounded origin load, and realistic operating costs without assuming portal advertising funds the system.</li>
       </ol>
-      <p>These are comparison findings, not changes to the approved product scope or roadmap. The <a href="design.html">high-level design</a> remains the source of truth.</p>
+      <p>The appliance row reflects the added design commitment; other suggested gap closures are comparison findings, not automatic scope changes. The <a href="design.html">high-level design</a> remains the source of truth.</p>
     </section>
 
     <footer>

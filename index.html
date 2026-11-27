@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>xjet-swarma-video — The video publisher, in control</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0f1419;
+      --surface: #1a2332;
+      --surface2: #243044;
+      --text: #e7ecf3;
+      --muted: #b0bed0;
+      --accent: #8cc5f0;
+      --green: #9edbbd;
+      --border: #35455b;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text); font: 1rem/1.65 "Segoe UI", system-ui, sans-serif; }
+    .wrap { max-width: 76rem; margin: auto; padding: 1.5rem 1.25rem 4rem; }
+    nav { display: flex; flex-wrap: wrap; gap: 0.65rem 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
+    a { color: var(--accent); text-underline-offset: 0.2em; }
+    a:focus-visible, .table-wrap:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
+    .eyebrow { color: var(--green); text-transform: uppercase; letter-spacing: 0.09em; font-size: 0.85rem; font-weight: 650; }
+    header { padding: 2.5rem 0 1rem; }
+    h1 { font-size: clamp(2rem, 5vw, 3.5rem); line-height: 1.12; letter-spacing: -0.035em; max-width: 55rem; margin: 0.75rem 0 1.25rem; }
+    .lead { font-size: 1.2rem; max-width: 62rem; }
+    h2 { font-size: 1.55rem; line-height: 1.3; margin: 0 0 1rem; }
+    h3 { font-size: 1.1rem; margin: 0 0 0.5rem; color: var(--accent); }
+    section { margin-top: 2.5rem; }
+    p { margin: 0.6rem 0 1rem; }
+    .muted, .hint, footer { color: var(--muted); }
+    .notice { padding: 1rem 1.25rem; background: var(--surface); border-left: 4px solid var(--accent); }
+    .notice p:last-child { margin-bottom: 0; }
+    .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem; }
+    .card p:last-child { margin-bottom: 0; }
+    .table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 8px; }
+    table { width: 100%; min-width: 42rem; border-collapse: collapse; background: var(--surface); }
+    caption { text-align: left; padding: 1rem; background: var(--surface2); font-weight: 650; }
+    th, td { text-align: left; vertical-align: top; padding: 1rem; border-bottom: 1px solid var(--border); }
+    thead th { background: var(--surface2); }
+    tbody th { width: 23%; }
+    tr:last-child > * { border-bottom: 0; }
+    li { margin: 0.65rem 0; }
+    .steps { padding-left: 1.4rem; }
+    footer { margin-top: 3rem; border-top: 1px solid var(--border); padding-top: 1rem; font-size: 0.9rem; }
+    @media (max-width: 720px) { .grid { grid-template-columns: 1fr; } }
+    @media print {
+      :root { color-scheme: light; --bg: #fff; --surface: #fff; --surface2: #edf1f5; --text: #111; --muted: #444; --accent: #075989; --green: #205d43; --border: #bbb; }
+      .wrap { max-width: none; padding: 0; }
+      .grid { grid-template-columns: 1fr; }
+      .table-wrap { overflow: visible; }
+      table { min-width: 0; }
+      .card, tr { break-inside: avoid; }
+      .hint { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <nav aria-label="Project navigation">
+      <a href="index.html" aria-current="page">Executive overview</a>
+      <a href="docs/design.html">Full design</a>
+      <a href="docs/video-comparison.html">Video goals vs design</a>
+      <a href="https://github.com/christopherwhull/xjet-swarma-video">GitHub repository</a>
+    </nav>
+
+    <header>
+      <p class="eyebrow">xjet-swarma-video · Executive overview</p>
+      <h1>The publisher provides the video.<br />The network provides the reach.</h1>
+      <p class="eyebrow">Human-led niche curation. Or discovery through your own AI agent. Your choice.</p>
+      <p class="lead">A video publisher is the person or organization that brings a video to the network, has the right to distribute it, sets the terms for watching it, and receives the earnings from paid access. The publisher keeps control of the library and its keys instead of handing the business to a platform.</p>
+      <p class="muted">Media publishers may be original artists or authorized rights-holders. Publishing is also how a viewer shares a recommendation or review: they operate their own lightweight local or cloud publishing setup, without acquiring rights to the original video.</p>
+    </header>
+
+    <aside class="notice" aria-label="Project status">
+      <p><strong>Current status: product and architecture design, not a launched service.</strong> This page describes the intended experience and responsibilities. The appliance, payment services, cloud failover, and peer-assisted player still require implementation and validation.</p>
+    </aside>
+
+    <section aria-labelledby="promise">
+      <h2 id="promise">Ownership, income, and a direct relationship</h2>
+      <div class="grid">
+        <article class="card">
+          <h3>Own the library</h3>
+          <p>Choose where the videos live. Keep publishing authority, encryption keys, and the ability to move the library. The coordination platform does not take custody of the masters.</p>
+        </article>
+        <article class="card">
+          <h3>Choose the offer</h3>
+          <p>Offer free access, penny-scale paid viewing, or other clearly disclosed conditions. Set pricing, previews, access duration, and spending limits. Viewers may also buy a gifted view for someone else.</p>
+        </article>
+        <article class="card">
+          <h3>See the earnings</h3>
+          <p>See pending earnings as paid viewing begins, with available funds distinguished from payments still awaiting confirmation. Funds follow publisher-selected rails; audience size does not guarantee revenue.</p>
+        </article>
+      </div>
+    </section>
+
+    <section aria-labelledby="publisher-home">
+      <h2 id="publisher-home">Your page. Your highlights. Your community.</h2>
+      <p>Each publisher has a public home similar in purpose to a YouTube channel—but the publisher defines the content and presentation. Introduce your work, choose which videos to highlight, arrange collections, and explain why those selections matter. The platform helps people find the page; it does not take over its editorial choices.</p>
+      <div class="grid">
+        <article class="card">
+          <h3>Human-led niche curation</h3>
+          <p>Discover work selected by people who know their subject. Publisher-picked highlights and attributed curator collections put expertise and a recognizable editorial voice ahead of a compulsory platform feed.</p>
+        </article>
+        <article class="card">
+          <h3>Or let your own agent help</h3>
+          <p>Viewers keep a local catalog of trusted publishers and may use their own agent to review shared captions, metadata, and reviews. Unfamiliar publishers stay outside the ordinary feed unless the viewer explicitly chooses to inspect them.</p>
+        </article>
+        <article class="card">
+          <h3>A publisher-owned forum</h3>
+          <p>Run a feedback space for your audience, set its rules, appoint moderators, and take its data with you when you move. Stewardship remains subject to contributors' rights, privacy choices, and safety obligations.</p>
+        </article>
+      </div>
+      <p>Public pages, member-only discussions, video purchases, and overlay permission are separate choices. Owning a community space does not mean owning its members or their personal data.</p>
+      <p><a href="docs/design.html#publisher-pages">Publisher pages and feedback forums</a> · <a href="docs/design.html#local-catalog">Viewer-owned local catalogs</a></p>
+    </section>
+
+    <section aria-labelledby="provides">
+      <h2 id="provides">What the video publisher provides</h2>
+      <p>The publisher supplies more than a file. They provide a complete, watchable offer: the work, its presentation, permission to watch, and dependable access.</p>
+      <p class="hint" id="table-help">On smaller screens, scroll the table horizontally.</p>
+      <div class="table-wrap" role="region" aria-labelledby="provides" aria-describedby="table-help" tabindex="0">
+        <table>
+          <caption>The publisher's contribution and accountability</caption>
+          <thead>
+            <tr><th scope="col">Publisher provides</th><th scope="col">What that means for the business</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">The video and its rights</th><td>Original or properly licensed work, an accurate title and description, a thumbnail, previews, language/caption information, sponsorship disclosures, and appropriate content warnings.</td></tr>
+            <tr><th scope="row">The viewing offer</th><td>Clear free or paid access choices, the price and scope of a purchase or gift, any expiry, and the applicable refund or retry rules. No hidden switch from a free preview to an undisclosed charge.</td></tr>
+            <tr><th scope="row">Their page and community</th><td>The publisher defines page content, featured videos and collections, and the feedback forum's rules and moderators. The page and forum are portable; the platform does not silently replace publisher selections with promotions.</td></tr>
+            <tr><th scope="row">The publishing appliance</th><td>A supported PC or small appliance, library storage, and an internet connection. Guided software handles preparation and publishing without requiring the publisher to administer media protocols manually.</td></tr>
+            <tr><th scope="row">A cloud backup origin</th><td>A publisher-operated and publisher-funded cloud instance with a verified serving copy of published local-origin content. The cloud copy is ready before publication and serves viewers when the local appliance is unplugged. It is not the platform's video warehouse.</td></tr>
+            <tr><th scope="row">Authority to unlock</th><td>A reachable publisher-controlled or authorized Key Agent decides whether access conditions have been met. That unlock path must also survive local appliance failure; a media copy alone cannot issue new viewing permissions.</td></tr>
+            <tr><th scope="row">Business operations</th><td>Secure recovery material, working payout destinations, cloud bills, capacity monitoring, and timely responses to legitimate rights or safety notices. Serving replicas and independent recovery backups have different jobs.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p><a href="docs/design.html#s6">Publisher role and responsibilities</a> · <a href="docs/design.html#turnkey-appliance">Turnkey appliance requirements</a> · <a href="docs/design.html#cloud-backup-origin">Cloud backup and failover</a></p>
+    </section>
+
+    <section aria-labelledby="network">
+      <h2 id="network">What the network contributes</h2>
+      <p><strong>The centralized platform holds what each publisher chooses to share—not ownership of the video library.</strong> That can include metadata, closed captions, selected reviews, and current content locations. A shared record helps a viewer or their agent investigate a publisher; it does not buy placement in the viewer's local catalog or confer trust.</p>
+      <div class="grid">
+        <article class="card">
+          <h3>Discovery and trust</h3>
+          <p>The platform is one discovery source among many. Viewers can find publishers through friends, communities, websites, direct links, or search, then decide whom to trust. AI-generated upload volume cannot place an untrusted publisher in the ordinary viewing feed.</p>
+        </article>
+        <article class="card">
+          <h3>Efficient delivery</h3>
+          <p>HLS provides adaptive streaming over HTTPS. WebTorrent/WebRTC adds peer assistance; optional ISP and edge caches hold encrypted segments. Publisher cloud failover protects against a local-origin outage.</p>
+        </article>
+        <article class="card">
+          <h3>Useful visibility</h3>
+          <p>Publisher and platform operator see aggregate retention, skips, exits, and player-managed link activity. Detailed per-viewer timelines are encrypted for the relevant publisher and use publisher-scoped pseudonyms—not an automatic disclosure of real identity.</p>
+        </article>
+      </div>
+      <p>The public library contains publisher-approved discovery fields and any captions/reviews they lawfully opt to share. Full transcripts are optional because they can reveal a paid video's substance. Private local catalogs, trust lists, forums, and viewing histories are not public discovery records.</p>
+      <p>Behind the catalog, separate operational services still handle verification, key-request relaying, safety cases, quotas, and the protected analytics store. Calling the platform a metadata library does not mean those private records disappear or become publicly searchable.</p>
+      <p><a href="docs/design.html#metadata-library">Centralized metadata and location libraries</a></p>
+    </section>
+
+    <section aria-labelledby="relationship">
+      <h2 id="relationship">The viewer relationship is not advertising inventory</h2>
+      <p>The platform does not inject ads or promotions between publisher and viewer. Quality questionnaires are the only platform-inserted engagement and remain brief, voluntary, and noncommercial. Optional overlays appear only after <strong>both publisher and viewer explicitly opt in</strong>; buying or accepting a gifted view does not count as that permission.</p>
+      <p>A sponsor read or banner already included by the publisher remains part of the video. Paid access does not remove it unless the publisher supplies a separate version and promises that in the offer. Analytics collection is disclosed separately from overlay permission.</p>
+      <p><a href="docs/design.html#s7">Media, sponsorship, and overlay rules</a> · <a href="docs/design.html#s20">Analytics visibility and privacy</a></p>
+    </section>
+
+    <section aria-labelledby="local-discovery">
+      <h2 id="local-discovery">Trust is local. Recommendations have a publisher.</h2>
+      <p>You choose the publishers in your catalog, and your agent works within that choice. New sources enter through an explicit discovery step—not an unsolicited global feed. Trusting a friend as a recommender does not automatically subscribe you to every creator they mention.</p>
+      <p>To share a recommendation, run a lightweight publishing setup on your own device or in your cloud account. Publish a signed reference and your reason for recommending it; the recipient chooses whether to inspect, accept, or block it. The original publisher retains the video, access terms, and revenue. No copied keys or reuploaded video are needed.</p>
+      <p>This protects attention, not the entire infrastructure from abuse. Trusted accounts can be compromised; import limits, source revocation, agent safeguards, and central anti-spam controls still matter.</p>
+      <p><a href="docs/design.html#local-catalog">Local trust and reviewing agents</a> · <a href="docs/design.html#recommendation-publishing">Local or cloud recommendation publishing</a></p>
+    </section>
+
+    <section aria-labelledby="asset-exchange">
+      <h2 id="asset-exchange">Video assets can move between trusted peers</h2>
+      <p>A publisher can contract with trusted peers to move, hold, or serve their video assets for compensation. A publisher-signed inventory and cryptographic checksums identify the exact version; a receiving peer verifies the complete transfer before acknowledging acceptance. Matching bytes make replication verifiable—not an automatic transfer of copyright or viewing keys.</p>
+      <p>Price, permitted use, onward sharing, storage term, and payment conditions are agreed first. Compensation stays separate from viewer access earnings unless the publisher explicitly funds it. A receipt supports settlement; it does not eliminate collusion or disputes.</p>
+      <p><a href="docs/design.html#trusted-peer-exchange">Trusted-peer asset exchange and compensation</a></p>
+    </section>
+
+    <section aria-labelledby="money">
+      <h2 id="money">Keep the economics understandable</h2>
+      <ol class="steps">
+        <li><strong>Viewing value belongs to the publisher.</strong> Paid access follows publisher-selected payment destinations; the platform is not the default merchant of record. Any optional custodial balance service must be explicitly chosen and disclosed.</li>
+        <li><strong>Delivery is a separate cost.</strong> The publisher pays for their cloud backup origin and may separately fund faster edge delivery. ISPs do not automatically take a percentage of viewing pennies.</li>
+        <li><strong>Coordination has its own price.</strong> Disclosed control-plane or service fees remain separate from access earnings and delivery budgets.</li>
+      </ol>
+      <p>Free viewing choices remain possible, but running the publishing service is not cost-free. Creator-owned infrastructure moves responsibility and spending to the publisher; it does not eliminate them.</p>
+      <p><a href="docs/design.html#s5">Business order</a> · <a href="docs/design.html#s9">Earnings, pricing, and gifts</a></p>
+    </section>
+
+    <section aria-labelledby="journey">
+      <h2 id="journey">From first setup to a dependable published title</h2>
+      <ol class="steps">
+        <li><strong>Set up:</strong> install on supported hardware, create or recover the publisher identity, and complete a recovery check.</li>
+        <li><strong>Connect the backup:</strong> configure the publisher's cloud instance, accept its disclosed costs, and verify media and unlock availability.</li>
+        <li><strong>Prepare the offer:</strong> import the work, add its presentation and access terms, and let the appliance package, encrypt, and replicate it.</li>
+        <li><strong>Publish when ready:</strong> only advertise a local-origin title as ready after its complete cloud serving copy is verified. A viewer outside the publisher's home network must be able to unlock and watch it.</li>
+        <li><strong>Operate:</strong> monitor earnings, audience summaries, replication health, notices, and costs. Test playback and fresh unlocks with the local appliance unplugged—not just while everything is working.</li>
+      </ol>
+    </section>
+
+    <aside class="notice" aria-label="Boundaries">
+      <p><strong>Control does not mean a guarantee of reach, profit, or uninterrupted service.</strong> Both origins can fail; a live encoder outage cannot be repaired by replaying a cloud copy. Review and delisting obligations still apply. Independent competing portals remain a later design area, so ownership of files must not be confused with completed independence from discovery gatekeepers.</p>
+    </aside>
+
+    <footer>
+      <p><strong>The publishing proposition:</strong> bring the work, set the offer, keep the library, operate its availability, and earn from the relationship. Use the network for discovery, trust, and delivery—not as the owner of the business.</p>
+      <p><a href="docs/design.html">Read the full design</a> · <a href="docs/video-comparison.html">Compare with the original video proposal</a> · <a href="README.md">Repository overview</a></p>
+    </footer>
+  </main>
+</body>
+</html>

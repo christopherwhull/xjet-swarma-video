@@ -7,6 +7,7 @@ xjet-swarma-video is a **decentralized video publishing and delivery concept**: 
 | | |
 |--|--|
 | **Status** | High-level product and architecture design (not production software yet) |
+| **Executive index** | [`index.html`](index.html) — the video publisher's role, contribution, control, and responsibilities |
 | **Full design** | [`docs/design.html`](docs/design.html) — journey-first, Parts A–E, sections 1–29 (reading order) |
 | **Original proposal / inspiration** | [YouTube](https://youtu.be/eEjYXw3j4pM?si=yrF0K31CxAWU-tgl) — not an implementation demo |
 | **Video goals vs design delivery** | [`docs/video-comparison.html`](docs/video-comparison.html) — timestamped comparison, coverage, and gaps |
@@ -85,6 +86,16 @@ Creator (CEA)                 Coordination fabric (CDF)              Viewer
 
 **Keys never live at the ISP.** Delivery settlement and access earnings are **separate ledgers**.
 
+**Media delivery basis:** HLS playlists and encrypted segments over HTTPS, with WebTorrent/WebRTC peer assistance and HTTPS fallback when peers are unavailable or sharing is disabled. HLS.js plus a compatible peer loader is the reference integration direction; encryption/KeyGrant adapters, native-player support, and appliance seed compatibility must be validated before release. See [design §7.7](docs/design.html#webtorrent-hls). This is a design choice, not an implemented runtime.
+
+**Publisher-operated cloud backup:** published local-origin titles require a verified serving replica on a cloud instance run and paid for by the video publisher. Replicate before publication, fail over when the appliance is unplugged, and keep an independent publisher-authorized Key Agent path available. This is not CDF-owned hosting or an optional peer cache; see [design §4.7](docs/design.html#cloud-backup-origin). Simultaneous cloud/local failures can still cause an outage.
+
+**Your page, your highlights, your community:** publishers define their channel-like public pages, featured videos, and feedback forums. **Human-led niche curation—or discovery through your own AI agent. Your choice.** Centralized servers maintain searchable metadata and fresh delivery locations, not ownership of the video library. Private forum data and creator-private viewing histories are not public catalog records. See [publisher pages §6.11](docs/design.html#publisher-pages) and [metadata/location libraries §4.8](docs/design.html#metadata-library).
+
+**Trust before attention:** viewers find publishers through any chosen route and maintain a local catalog of trusted identities, with their own agents reviewing permitted content. Shared captions, reviews, and metadata enter central discovery only as their publishers choose; indexing or AI upload volume does not confer feed placement. Users sharing recommendations operate a lightweight publisher setup locally or in their own cloud account—without rehosting videos or sharing keys. See [local catalogs §12.7](docs/design.html#local-catalog) and [recommendation publishing §6.12](docs/design.html#recommendation-publishing).
+
+**Trusted-peer asset exchange:** publishers may authorize compensated transfers or hosting of specific video assets between trusted operators. Signed manifests, cryptographic checksums, verified receipt, and capped contracts govern settlement; moving bytes alone transfers neither copyright nor viewer unlock authority. See [design §11.11](docs/design.html#trusted-peer-exchange).
+
 ---
 
 
@@ -157,9 +168,9 @@ Full rules: [`docs/design.html`](docs/design.html) section 15.
 
 | Phase | Focus |
 |-------|--------|
-| **0** | Segment encrypt to MinIO; one requirement; local Key Agent; HTTP play |
+| **0** | Segment encrypt to MinIO; one requirement; local Key Agent; encrypted HLS over HTTPS |
 | **1** | ABR VOD and captions; penny per-view and live ledger ticker; basic report/delist |
-| **2** | P2P assist; delegated Key Agent; full S0–S4 moderation; fill-lease at $0 |
+| **2** | WebTorrent/WebRTC-assisted HLS; delegated Key Agent; full S0–S4 moderation; fill-lease at $0 |
 | **3** | ISP PoD, multi-home packages, diversity pay, live streaming |
 | **4** | Federation, hash-list partnerships, conformance |
 
