@@ -8,7 +8,8 @@ xjet-swarma-video is a **decentralized video publishing and delivery concept**: 
 |--|--|
 | **Status** | High-level product and architecture design (not production software yet) |
 | **Full design** | [`docs/design.html`](docs/design.html) — journey-first, Parts A–E, sections 1–29 (reading order) |
-| **Demo / pitch video** | [YouTube](https://youtu.be/eEjYXw3j4pM?si=yrF0K31CxAWU-tgl) |
+| **Original proposal / inspiration** | [YouTube](https://youtu.be/eEjYXw3j4pM?si=yrF0K31CxAWU-tgl) — not an implementation demo |
+| **Video goals vs design delivery** | [`docs/video-comparison.html`](docs/video-comparison.html) — timestamped comparison, coverage, and gaps |
 
 ---
 
