@@ -411,6 +411,7 @@
             <li><a href="#s8">§8 End-to-end flows</a></li>
             <li><a href="#s10">§10 Internationalization and accessibility</a></li>
             <li><a href="#s22">§22 Viewer feedback &amp; content review</a></li>
+            <li><a href="#s28">§28 Account watch quotas</a></li>
           </ol>
         </li>
         <li class="part-block">
@@ -1367,6 +1368,7 @@
         <li><strong>Play</strong> — KeyGrants roll forward; ABR + captions; bytes from edge, swarm, or origin. <a href="#s8">§8.4</a>, <a href="#s20">§20</a></li>
         <li><strong>Session spend</strong> — running total on paid paths; stop raises stop new grants after a short grace. <a href="#s26">§26</a></li>
         <li><strong>Report</strong> — spam, unlawful, misleading unlock, etc.; personal “hide” is not a network strike. <a href="#s22">§22</a></li>
+        <li><strong>Daily watch quota</strong> — at most 48 hours of content timeline per day per account (shared devices); soft warnings then KeyGrants stop. <a href="#s28">§28</a></li>
       </ol>
       <div class="callout">
         <strong>Viewer promise:</strong> honest unlock choices, no surprise large holds for penny video, playback works when the creator’s unlock path is healthy, and harmful content can be flagged without needing to understand ISPs or ledgers.
@@ -1604,6 +1606,176 @@
         <li>§18: blocked titles skip key relay regardless of agent uptime.</li>
       </ul>
     </section>
+
+    <section id="s28">
+      <h2>28) Account watch quotas (max 48 hours of content per day)</h2>
+      <p>
+        End accounts are limited to a <strong>reasonable daily diet of streams</strong>:
+        by default no more than <strong>48 hours of media timeline</strong> per quota day,
+        shared across devices, with a small concurrent-stream cap.
+        This deters farm-scale re-streaming while remaining generous for real fans.
+      </p>
+
+      <h3>28.1 Goals</h3>
+      <ul>
+        <li>Cap abuse and industrial scraping of unlock + play paths.</li>
+        <li>Keep casual and heavy human viewing comfortable (48h/day is a high ceiling).</li>
+        <li>Enforce at <strong>KeyGrant</strong> time so ciphertext alone is not a loophole.</li>
+        <li>Prefer <strong>watch time</strong> over crude “number of titles opened.”</li>
+      </ul>
+
+      <h3>28.2 Primary meter: watch time</h3>
+      <table>
+        <thead>
+          <tr><th>Meter</th><th>Definition</th><th>Default limit</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Watch-time budget</strong></td>
+            <td>Seconds of media timeline advanced under an active unlock (playhead / grant window)</td>
+            <td><strong>48 hours</strong> = 172,800 seconds per quota day</td>
+          </tr>
+          <tr>
+            <td><strong>Concurrent sessions</strong></td>
+            <td>Simultaneous active quota leases / grant sessions per account</td>
+            <td><strong>3</strong></td>
+          </tr>
+          <tr>
+            <td><strong>Session starts</strong> (optional soft)</td>
+            <td>Distinct play sessions started</td>
+            <td>Soft warn only in MVP</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>
+        <strong>Quota day:</strong> account-local calendar day when timezone is known; otherwise UTC calendar day.
+        Rolling 24h is an allowed alternate but must be disclosed in UX.
+      </p>
+
+      <h3>28.3 What counts toward 48 hours</h3>
+      <ul>
+        <li><strong>Counts:</strong> decrypted playback progress on unlocked titles (VOD timeline or live tune-in wall clock while grants are active).</li>
+        <li><strong>Charge basis:</strong> media timeline (ABR does not multiply hours by bitrate).</li>
+        <li><strong>Minimum progress:</strong> optional grace (e.g. first 30 seconds) to ignore aborted starts.</li>
+        <li><strong>Exempt when Policy says so:</strong> previews/trailers marked <code>quota_exempt</code>.</li>
+        <li><strong>Does not fully charge:</strong> buffering stalls (use media time, not wall clock for VOD); failed unlocks.</li>
+        <li><strong>Seeking (v1):</strong> charge playhead advances with simple anti-spam; refine later if needed.</li>
+      </ul>
+
+      <h3>28.4 Who owns the bucket</h3>
+      <table>
+        <thead>
+          <tr><th>Identity</th><th>Budget</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Recoverable viewer root (end account)</td>
+            <td>One shared 48h pool across all enrolled devices</td>
+          </tr>
+          <tr>
+            <td>Ephemeral / anonymous device</td>
+            <td>Lower guest cap (default <strong>4 hours</strong>/day, <strong>1</strong> concurrent)</td>
+          </tr>
+          <tr>
+            <td>Devices under one root</td>
+            <td>Share the account pool; concurrency still capped</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>
+        Paid pennies <strong>do not</strong> bypass the network watch-time ceiling by default
+        (otherwise bots purchase infinite play). A higher cap requires an explicit product SKU (e.g. “pro pass”), not silence.
+      </p>
+
+      <h3>28.5 Enforcement path</h3>
+      <ol>
+        <li>Viewer opens or renews playback → client requests a <strong>quota lease</strong> for <code>session_id</code>.</li>
+        <li>Quota service (CDF-hosted or creator-delegated under network rules) returns remaining seconds or <code>429 QUOTA_EXCEEDED</code>.</li>
+        <li>Key Agent issues/extends KeyGrants only with a valid lease and remaining budget ≥ next window.</li>
+        <li>Client heartbeats media seconds advanced; lease consumes budget.</li>
+        <li>On exhaust: finish current short grace (e.g. ≤ 2 minutes / current segment), then no new grants until reset.</li>
+      </ol>
+      <div class="callout">
+        <strong>Authoritative gate = KeyGrant path.</strong>
+        Edges may still hold ciphertext; without keys, over-quota accounts cannot play.
+      </div>
+
+      <h3>28.6 Concurrent streams</h3>
+      <ul>
+        <li>Each active lease holds one concurrency slot.</li>
+        <li>Heartbeat expiry (e.g. 1–2 minutes) frees slots when players die.</li>
+        <li>Over concurrency → deny new leases even if watch-time remains (stops “3 hours × 20 TVs” tricks against a naive wall-clock counter).</li>
+      </ul>
+      <p>
+        Note: watch-time should accrue <strong>per active session</strong> (parallel streams burn budget faster), which further discourages fan-out.
+      </p>
+
+      <h3>28.7 Network vs creator policy</h3>
+      <ul>
+        <li><strong>Network ceiling:</strong> 48h/day and concurrency defaults (anti-farm floor).</li>
+        <li><strong>Creators may tighten</strong> per title or catalog (e.g. max 6h/day on my content).</li>
+        <li><strong>Creators may not exceed</strong> the network ceiling without a special program flag.</li>
+        <li>Title-level <code>quota_exempt</code> only for short previews or explicitly allowed public packs.</li>
+      </ul>
+
+      <h3>28.8 Defaults (normative MVP)</h3>
+      <table>
+        <thead>
+          <tr><th>Knob</th><th>Default</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>watch_time_limit_per_day</code></td><td><strong>48 hours</strong></td></tr>
+          <tr><td><code>quota_period</code></td><td>Account-local day (else UTC)</td></tr>
+          <tr><td><code>max_concurrent_sessions</code></td><td><strong>3</strong></td></tr>
+          <tr><td><code>anonymous_watch_time_limit</code></td><td><strong>4 hours</strong></td></tr>
+          <tr><td><code>anonymous_concurrent</code></td><td><strong>1</strong></td></tr>
+          <tr><td><code>grace_after_exceeded</code></td><td>≤ 2 minutes or current segment</td></tr>
+          <tr><td><code>preview_exempt</code></td><td>Yes when Policy marks exempt</td></tr>
+          <tr><td><code>paid_bypasses_quota</code></td><td><strong>No</strong></td></tr>
+        </tbody>
+      </table>
+
+      <h3>28.9 UX</h3>
+      <ul>
+        <li>Account page: used / remaining hours; reset time.</li>
+        <li>Soft warnings near 80% and 95% of daily budget.</li>
+        <li>Hard stop copy: “Daily watch limit reached (48 hours). Resets at …”.</li>
+        <li>Concurrency conflict: “Too many devices playing—stop one to continue.”</li>
+      </ul>
+
+      <h3>28.10 APIs (descriptive)</h3>
+      <ul>
+        <li><code>GET /v1/quota/me</code> — used, limit, concurrent, resets_at.</li>
+        <li><code>POST /v1/quota/leases</code> — open session lease or 429.</li>
+        <li><code>POST /v1/quota/heartbeat</code> — media seconds advanced; returns remaining.</li>
+        <li><code>POST /v1/quota/leases/{id}/close</code> — release concurrency.</li>
+        <li>KeyGrant requests reference <code>lease_id</code> + account binding.</li>
+      </ul>
+
+      <h3>28.11 Anti-bypass</h3>
+      <ul>
+        <li>Budget on viewer root, not cookies alone.</li>
+        <li>Leases bound to device key + session id.</li>
+        <li>Ephemeral identity churn from one device/IP → challenges and guest caps.</li>
+        <li>Velocity limits on lease minting.</li>
+        <li>Optional later: fetch tokens for ciphertext tied to lease (byte-leech friction).</li>
+      </ul>
+
+      <h3>28.12 Relation to other sections</h3>
+      <ul>
+        <li><a href="#s19">§19</a> Identity — recoverable root owns the 48h pool.</li>
+        <li><a href="#s18">§18</a> Key Agent — refuses grants without quota lease.</li>
+        <li><a href="#s26">§26</a> Money — pennies do not auto-lift quota.</li>
+        <li><a href="#s4">§4</a> Policy — creator tighten + preview exempt flags.</li>
+        <li><a href="#journey-viewer">Viewer journey</a> — soft warnings during play.</li>
+      </ul>
+
+      <div class="callout">
+        <strong>Normative one-liner:</strong>
+        Each end account may unlock and advance at most 48 hours of media timeline per day (shared across devices), with a small concurrent-stream cap; Key Agents refuse further KeyGrants when the quota lease is exhausted.
+      </div>
+    </section>
+
 
     <div class="part-banner" id="part-d-network-trust-operations">
       <h2>Part D — Network, trust &amp; operations</h2>
@@ -1995,7 +2167,7 @@
     <footer>
       <p>Reading order follows creator and viewer journeys; § numbers remain stable for cross-references.</p>
       <p>High-level design document · implementation-agnostic · access path, delivery path, trust-safety pull path, and creator earnings ledger kept separate by design.</p>
-      <p>Parts A–E · sections §1–§27 stable ·  File: <code>creator-hosted-video-network-design.html</code></p>
+      <p>Parts A–E · sections §1–§28 stable ·  File: <code>creator-hosted-video-network-design.html</code></p>
     </footer>
   </div>
 </body>

@@ -7,7 +7,7 @@ xjet-swarma-video is a **decentralized video publishing and delivery concept**: 
 | | |
 |--|--|
 | **Status** | High-level product and architecture design (not production software yet) |
-| **Full design** | [`docs/design.html`](docs/design.html) — journey-first, Parts A–E, sections 1–27 |
+| **Full design** | [`docs/design.html`](docs/design.html) — journey-first, Parts A–E, sections 1–28 |
 | **Demo / pitch video** | [YouTube](https://youtu.be/eEjYXw3j4pM?si=yrF0K31CxAWU-tgl) |
 
 ---
@@ -106,6 +106,7 @@ Creator (CEA)                 Coordination fabric (CDF)              Viewer
 5. Play (ABR, captions; edge/swarm/origin)
 6. Session spend stays honest and capped
 7. Report when needed
+8. Daily watch quota — default max **48 hours** of content timeline per account per day (see design §28)
 
 ---
 
@@ -121,6 +122,19 @@ Creator (CEA)                 Coordination fabric (CDF)              Viewer
 | Platform is the bank | No default merchant of record; optional disclosed micro-ledger only |
 
 ---
+
+
+## Account watch quotas
+
+End accounts are limited to a **reasonable** amount of streaming:
+
+- **Default cap:** **48 hours** of media timeline per quota day (shared across devices)
+- **Concurrency:** small parallel stream limit (default 3) so one login cannot drive a wall of players
+- **Enforcement:** quota lease required for **KeyGrants**—over limit means playback stops, not just a soft warning
+- **Guests:** tighter anonymous caps; **pennies do not** auto-bypass the network ceiling
+- **Creators** may tighten further; they may not punch through the network anti-farm ceiling without a special program
+
+Full rules: [`docs/design.html`](docs/design.html) section 28.
 
 ## MVP roadmap (summary)
 
