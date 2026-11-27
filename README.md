@@ -7,7 +7,7 @@ xjet-swarma-video is a **decentralized video publishing and delivery concept**: 
 | | |
 |--|--|
 | **Status** | High-level product and architecture design (not production software yet) |
-| **Full design** | [`docs/design.html`](docs/design.html) — journey-first, Parts A–E, sections 1–28 (reading order) |
+| **Full design** | [`docs/design.html`](docs/design.html) — journey-first, Parts A–E, sections 1–29 (reading order) |
 | **Demo / pitch video** | [YouTube](https://youtu.be/eEjYXw3j4pM?si=yrF0K31CxAWU-tgl) |
 
 ---
@@ -85,6 +85,22 @@ Creator (CEA)                 Coordination fabric (CDF)              Viewer
 **Keys never live at the ISP.** Delivery settlement and access earnings are **separate ledgers**.
 
 ---
+
+
+## Content creator role
+
+**Content creators** are the people (or orgs) who **put video on the network and expect to get paid** when fans unlock and watch.
+
+| | |
+|--|--|
+| **They own** | Origin storage, encryption keys, unlock pricing, payout destinations |
+| **They do** | Publish via CEA, set free and/or penny paths, keep Key Agent reachable, optional multi-ISP delivery budget |
+| **They expect** | Transparent micropayments—ledger ticks as paid viewing starts, not a mystery month-end black box |
+| **They must** | Rights-clean catalog, honest metadata, trust-safety notice response, secure keys |
+
+Team seats (Owner, Publisher, Policy, Key Operator, Finance, Moderator liaison) can split the work; the **creator** remains the economic principal.
+
+Full definition: [`docs/design.html`](docs/design.html) section **6**.
 
 ## Creator journey (short)
 

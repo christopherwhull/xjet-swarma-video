@@ -390,52 +390,53 @@
             <li><a href="#s2">§2 Core principles</a></li>
             <li><a href="#s3">§3 Architecture one-liner</a></li>
             <li><a href="#s4">§4 Primary components</a></li>
-            <li><a href="#s5">§5 Business order &amp; multi-ISP cache model</a></li>
+            <li><a href="#s5">§5 Business order &amp; multi-ISP cache-fill model</a></li>
           </ol>
         </li>
         <li class="part-block">
           <span class="part-label">Part B — Creator experience</span>
           <ol>
             <li><a href="#journey-creator">Creator journey</a></li>
-            <li><a href="#s6">§6 Live vs VOD + media object model</a></li>
-            <li><a href="#s7">§7 Requirements and attestations</a></li>
-            <li><a href="#s8">§8 Creator monetary experience</a></li>
-            <li><a href="#s9">§9 Key Agent availability &amp; delegation</a></li>
-            <li><a href="#s10">§10 ISP / edge cache incentives</a></li>
+            <li><a href="#s6">§6 Content creator role</a></li>
+            <li><a href="#s7">§7 Live vs VOD + media object model</a></li>
+            <li><a href="#s8">§8 Requirements and attestations</a></li>
+            <li><a href="#s9">§9 Creator monetary experience</a></li>
+            <li><a href="#s10">§10 Key Agent availability &amp; delegation</a></li>
+            <li><a href="#s11">§11 ISP / edge cache incentives</a></li>
           </ol>
         </li>
         <li class="part-block">
           <span class="part-label">Part C — Viewer experience</span>
           <ol>
             <li><a href="#journey-viewer">Viewer journey</a></li>
-            <li><a href="#s11">§11 Identity, recovery, multi-device</a></li>
-            <li><a href="#s12">§12 End-to-end flows</a></li>
-            <li><a href="#s13">§13 Internationalization and accessibility</a></li>
-            <li><a href="#s14">§14 Viewer feedback &amp; content review</a></li>
-            <li><a href="#s15">§15 Account watch quotas</a></li>
+            <li><a href="#s12">§12 Identity, recovery, multi-device</a></li>
+            <li><a href="#s13">§13 End-to-end flows</a></li>
+            <li><a href="#s14">§14 Internationalization and accessibility</a></li>
+            <li><a href="#s15">§15 Viewer feedback &amp; content review</a></li>
+            <li><a href="#s16">§16 Account watch quotas</a></li>
           </ol>
         </li>
         <li class="part-block">
           <span class="part-label">Part D — Network, trust &amp; operations</span>
           <ol>
-            <li><a href="#s16">§16 CDF business, funding, ToS &amp; trust-safety</a></li>
-            <li><a href="#s17">§17 Governance, moderation, compliance</a></li>
-            <li><a href="#s18">§18 Security, privacy, abuse</a></li>
-            <li><a href="#s19">§19 Observability, reliability, SLAs</a></li>
-            <li><a href="#s20">§20 Scalability and cost posture</a></li>
+            <li><a href="#s17">§17 CDF business, funding, ToS &amp; trust-safety ske…</a></li>
+            <li><a href="#s18">§18 Governance, moderation, compliance</a></li>
+            <li><a href="#s19">§19 Security, privacy, abuse</a></li>
+            <li><a href="#s20">§20 Observability, reliability, SLAs</a></li>
+            <li><a href="#s21">§21 Scalability and cost posture</a></li>
           </ol>
         </li>
         <li class="part-block">
           <span class="part-label">Part E — Build contract</span>
           <ol>
-            <li><a href="#s21">§21 Data model</a></li>
-            <li><a href="#s22">§22 APIs</a></li>
-            <li><a href="#s23">§23 Interoperability contracts</a></li>
-            <li><a href="#s24">§24 Extensibility</a></li>
-            <li><a href="#s25">§25 Architecture diagrams</a></li>
-            <li><a href="#s26">§26 Glossary</a></li>
-            <li><a href="#s27">§27 MVP roadmap</a></li>
-            <li><a href="#s28">§28 Open questions and risks</a></li>
+            <li><a href="#s22">§22 Data model</a></li>
+            <li><a href="#s23">§23 APIs</a></li>
+            <li><a href="#s24">§24 Interoperability contracts</a></li>
+            <li><a href="#s25">§25 Extensibility</a></li>
+            <li><a href="#s26">§26 Architecture diagrams</a></li>
+            <li><a href="#s27">§27 Glossary</a></li>
+            <li><a href="#s28">§28 MVP roadmap</a></li>
+            <li><a href="#s29">§29 Open questions and risks</a></li>
           </ol>
         </li>
       </ol>
@@ -579,25 +580,25 @@
           <tr>
             <td><strong>1</strong></td>
             <td>Viewer → Creator</td>
-            <td>Access / earnings (§8)</td>
+            <td>Access / earnings (§9)</td>
             <td>Pennies-per-view (or other requirements). Creator sees pending/available as viewing starts.</td>
           </tr>
           <tr>
             <td><strong>2</strong></td>
             <td>Network enforcement</td>
-            <td>Trust-safety (§14)</td>
+            <td>Trust-safety (§15)</td>
             <td>Block/pull can remove addressability and future delivery eligibility before more money is spent warming bad content.</td>
           </tr>
           <tr>
             <td><strong>3</strong></td>
             <td>Creator → ISPs / edges</td>
-            <td>Delivery settlement (§10, this section)</td>
+            <td>Delivery settlement (§11, this section)</td>
             <td>Optional pin, prefetch, and hit rebates so <em>many</em> ISPs hold and serve ciphertext.</td>
           </tr>
           <tr>
             <td><strong>4</strong></td>
             <td>Anyone → CDF</td>
-            <td>Control-plane fees (§16)</td>
+            <td>Control-plane fees (§17)</td>
             <td>Thin catalog/broker fees only. CDF is not default merchant of record for access pennies.</td>
           </tr>
         </tbody>
@@ -608,7 +609,7 @@
         ISPs do <em>not</em> take a default cut of <code>per_view</code> pennies.
         Delivery budgets are not mixed into tip/view balances.
         Paid multi-ISP fill follows demand (or explicit creator boost)—not unbounded clone bounties.
-        Opt-in micro-ledger (§8) is UX only; sweeps still end at the creator.
+        Opt-in micro-ledger (§9) is UX only; sweeps still end at the creator.
       </div>
 
       <h3>5.2 Forbidden inversions</h3>
@@ -702,7 +703,7 @@
         <li>Other edges: <strong>FOLLOWER</strong>—peer-fill from HAVE donors or short wait; no origin token.</li>
         <li>Primary publishes signed <code>HAVE</code> + checksum; followers fan out edge-to-edge / swarm.</li>
         <li>Lease TTL + heartbeat; failure reassigns primary.</li>
-        <li>Blocked titles (§14): leases denied; HAVE invalidated by purge.</li>
+        <li>Blocked titles (§15): leases denied; HAVE invalidated by purge.</li>
       </ol>
       <p>
         Lottery weight example:
@@ -821,7 +822,7 @@
         </tbody>
       </table>
       <p>
-        Funding path for popular creators: <strong>earnings sweep (§8) → optional auto-allocate % to delivery budget</strong>
+        Funding path for popular creators: <strong>earnings sweep (§9) → optional auto-allocate % to delivery budget</strong>
         (creator toggle, e.g. “send 10% of available view pennies to multi-home cache”). Never silent.
       </p>
 
@@ -852,7 +853,7 @@
 
       <h3>5.12 End-to-end sequence (popular title)</h3>
       <ol>
-        <li>Viewers pay/fulfill → creator ledger ticks (§8).</li>
+        <li>Viewers pay/fulfill → creator ledger ticks (§9).</li>
         <li>Heat crosses threshold and/or creator enables Popular multi-home / boost.</li>
         <li>Delivery policy advertises intro pack + replica_target + budgets.</li>
         <li>Fill leases elect primaries per cell; origin pull bounded; HAVE fans out to other ISPs.</li>
@@ -886,7 +887,7 @@
         <li><code>GET /v1/delivery/policy/{title_id}</code> — replica targets, budgets, packs</li>
         <li><code>POST /v1/delivery/claims</code> — hit, diversity, pin, origin_fill, assist</li>
         <li><code>POST /v1/creator/delivery-budget</code> — allocate from earnings % or top-up</li>
-        <li>Block/purge channels from §14 override leases and claims</li>
+        <li>Block/purge channels from §15 override leases and claims</li>
       </ul>
 
       <h3>5.16 Success metrics</h3>
@@ -913,23 +914,126 @@
       <h2>Creator journey (day-one to steady state)</h2>
       <p>This is the creator-facing path through the system. Detailed mechanics live in the linked sections.</p>
       <ol>
-        <li><strong>Establish identity &amp; org</strong> — creator root keys, optional team roles (Owner, Publisher, Policy, Key Operator, Finance, Moderator). <a href="#s11">§11</a></li>
-        <li><strong>Run CEA</strong> — transcode, segment, per-segment encrypt, upload to your S3/MinIO, optional seed. <a href="#s4">§4.1</a>, <a href="#s6">§6</a></li>
-        <li><strong>Publish metadata</strong> — title, preview pack, manifest, content warnings. <a href="#s6">§6</a>, <a href="#s12">§12.1</a></li>
-        <li><strong>Set access Policy</strong> — free paths (goodwill, puzzle, email, …) and/or paid penny paths. <a href="#s7">§7</a></li>
-        <li><strong>Set money defaults</strong> — e.g. ~$0.02/view after a few seconds, optional per-minute, session cap; watch the live ticker as plays start. <a href="#s8">§8</a></li>
-        <li><strong>Keep unlock online</strong> — local Key Agent or delegated agents with health on the title page. <a href="#s9">§9</a></li>
-        <li><strong>Optional delivery spend</strong> — free speed, offset egress, popular multi-home, launch boost; never an automatic ISP cut of pennies. <a href="#s10">§10</a>, <a href="#s5">§5</a></li>
-        <li><strong>Operate</strong> — analytics, strikes/notices, appeals, payout sweeps. <a href="#s19">§19</a>, <a href="#s14">§14</a>, <a href="#s8">§8</a></li>
+        <li><strong>Act as content creator</strong> — publish video and expect payment (<a href="#s6">§6</a>).</li>
+        <li><strong>Establish identity &amp; org</strong> — creator root keys, optional team roles (Owner, Publisher, Policy, Key Operator, Finance, Moderator). <a href="#s12">§12</a></li>
+        <li><strong>Run CEA</strong> — transcode, segment, per-segment encrypt, upload to your S3/MinIO, optional seed. <a href="#s4">§4.1</a>, <a href="#s7">§7</a></li>
+        <li><strong>Publish metadata</strong> — title, preview pack, manifest, content warnings. <a href="#s7">§7</a>, <a href="#s13">§13.1</a></li>
+        <li><strong>Set access Policy</strong> — free paths (goodwill, puzzle, email, …) and/or paid penny paths. <a href="#s8">§8</a></li>
+        <li><strong>Set money defaults</strong> — e.g. ~$0.02/view after a few seconds, optional per-minute, session cap; watch the live ticker as plays start. <a href="#s9">§9</a></li>
+        <li><strong>Keep unlock online</strong> — local Key Agent or delegated agents with health on the title page. <a href="#s10">§10</a></li>
+        <li><strong>Optional delivery spend</strong> — free speed, offset egress, popular multi-home, launch boost; never an automatic ISP cut of pennies. <a href="#s11">§11</a>, <a href="#s5">§5</a></li>
+        <li><strong>Operate</strong> — analytics, strikes/notices, appeals, payout sweeps. <a href="#s20">§20</a>, <a href="#s15">§15</a>, <a href="#s9">§9</a></li>
       </ol>
       <div class="callout">
         <strong>Creator promise:</strong> you host the bytes and keys; you set the unlock rules; you see pennies when paid viewing starts; multi-ISP warmth is an explicit delivery budget, not a hidden platform skim.
       </div>
     </section>
-<section id="s6">
-      <h2>6) Live vs VOD + media object model</h2>
 
-      <h3>6.1 Presentation modes</h3>
+    <section id="s6">
+      <h2>6) Content creator role (publishers who expect payment)</h2>
+      <p>
+        A <strong>content creator</strong> (also: publisher) is a person or organization that
+        <strong>puts video on the network</strong> and <strong>expects to be paid</strong> when viewers
+        unlock and watch—normally in <strong>pennies-scale</strong> earnings that appear as viewing starts—
+        while retaining ownership of storage, encryption keys, and unlock policy.
+      </p>
+      <h3>6.1 Who counts as a content creator</h3>
+      <ul>
+        <li>Individuals, studios, educators, brands, or collectives that <strong>origin-publish</strong> titles.</li>
+        <li>They operate (or authorize) a <strong>Creator Endpoint App (CEA)</strong>, origin bucket, and Key Agent path.</li>
+        <li>They hold a <strong>creator root identity</strong> used to sign manifests, policies, and KeyGrants (or Delegation Grants).</li>
+        <li>They are <strong>not</strong> merely viewers, ISP edge operators, verifiers, or CDF operators—though one human may wear multiple hats with separate identities.</li>
+      </ul>
+      <h3>6.2 Core job to be done</h3>
+      <table>
+        <thead><tr><th>Job</th><th>What “done” looks like</th></tr></thead>
+        <tbody>
+          <tr><td>Publish</td><td>Encrypted segments on creator-controlled storage; catalog shows title, preview, unlock offer</td></tr>
+          <tr><td>Price access</td><td>Policy lists free and/or paid paths; penny defaults clear to fans</td></tr>
+          <tr><td>Get paid</td><td>Ledger ticks pending to available as paid viewing starts; sweeps to creator destinations</td></tr>
+          <tr><td>Stay open</td><td>Key Agent healthy (local or delegated); title shows unlock status</td></tr>
+          <tr><td>Optionally go wide</td><td>Delivery budget / multi-home for ISPs—without skim of view pennies</td></tr>
+          <tr><td>Good standing</td><td>Respond to notices; honor pulls; accurate metadata</td></tr>
+        </tbody>
+      </table>
+      <h3>6.3 Rights</h3>
+      <ul>
+        <li><strong>Custody of masters</strong> — choose origin storage (MinIO, cloud S3, etc.).</li>
+        <li><strong>Custody of keys</strong> — master keys stay creator-controlled; CDF never holds unwrapped content keys.</li>
+        <li><strong>Policy and pricing sovereignty</strong> — requirements, pennies, free paths, grant windows.</li>
+        <li><strong>Payout sovereignty</strong> — creator wallets/endpoints; no default platform MoR on access value.</li>
+        <li><strong>Delegation</strong> — Key Agents, team seats, delivery budgets without surrendering root ownership.</li>
+        <li><strong>Delist / relocate / appeal</strong> — control catalog presence and contest moderation outcomes.</li>
+      </ul>
+      <h3>6.4 Responsibilities</h3>
+      <ul>
+        <li>Only publish content they have rights to distribute.</li>
+        <li>Accurate metadata, previews, and content warnings.</li>
+        <li>Reachable unlock path (Key Agent) when promising paid or gated viewing.</li>
+        <li>Trust-safety notice response; origin removal when a pull requires it.</li>
+        <li>Correct payout setup; understand pending vs available vs reversed.</li>
+        <li>Fund multi-ISP delivery budgets explicitly if used.</li>
+        <li>Secure creator root keys and recovery; rotate on compromise.</li>
+      </ul>
+      <h3>6.5 Payment expectation (normative)</h3>
+      <div class="callout">
+        <strong>Creators expect money when fans watch paid paths—not a black-box monthly surprise.</strong>
+        Default promise: micropayments (pennies per view / minute / small unlock), live ledger visibility,
+        sweep to creator-controlled rails. Free paths may pay $0 access value unless a sponsor subsidy exists.
+      </div>
+      <ul>
+        <li><strong>Trigger:</strong> paid watch start / meter ticks under a funded session.</li>
+        <li><strong>Visibility:</strong> pending within seconds; available after rail finality.</li>
+        <li><strong>Not automatic:</strong> ISP rebates and CDF fees are separate from view pennies.</li>
+        <li><strong>Payment is not infinite farm rights:</strong> viewer daily watch quotas still apply.</li>
+      </ul>
+      <h3>6.6 Role vs team seats</h3>
+      <p>Content creator is the <strong>economic principal</strong>. Work may split across org seats:</p>
+      <table>
+        <thead><tr><th>Seat</th><th>Duties</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Owner</strong></td><td>Root identity, recovery, payout endpoints, final authority</td></tr>
+          <tr><td><strong>Publisher</strong></td><td>Upload, manifests, metadata, previews</td></tr>
+          <tr><td><strong>Policy Editor</strong></td><td>Access requirements, penny prices, previews</td></tr>
+          <tr><td><strong>Key Operator</strong></td><td>Key Agent health, delegation, rotation</td></tr>
+          <tr><td><strong>Finance</strong></td><td>Ledger, sweeps, delivery budgets, tax exports</td></tr>
+          <tr><td><strong>Moderator liaison</strong></td><td>Notices, strikes, appeals, takedowns</td></tr>
+        </tbody>
+      </table>
+      <p>Solo creators wear every seat; larger teams separate Key Operator from Policy Editor.</p>
+      <h3>6.7 What creators are not</h3>
+      <ul>
+        <li>Not the CDF (unless also operating fabric under another role).</li>
+        <li>Not ISPs by default (may self-seed P2P).</li>
+        <li>Not forced into ads-only monetization.</li>
+        <li>Not promised legacy-platform RPM parity—only a fair pipe and honest ledgers.</li>
+      </ul>
+      <h3>6.8 Lifecycle</h3>
+      <ol>
+        <li><strong>Onboard</strong> — creator root; optional verification; payout endpoints.</li>
+        <li><strong>First publish</strong> — CEA pipeline; free and/or penny template.</li>
+        <li><strong>First earnings</strong> — confirm ticker and sweep.</li>
+        <li><strong>Operate</strong> — policy, multi-home, fans, notices.</li>
+        <li><strong>Pause / exit</strong> — delist, revoke agents, final sweep, retire keys.</li>
+      </ol>
+      <h3>6.9 Success metrics</h3>
+      <ul>
+        <li>Time from publish to first paid view credit.</li>
+        <li>Share of available balance swept successfully.</li>
+        <li>Key Agent / unlock-path uptime.</li>
+        <li>Explainable eCPMv (earnings per thousand paid views).</li>
+        <li>Notice SLA met; low reverse rate.</li>
+      </ul>
+      <div class="callout">
+        <strong>One-liner:</strong>
+        Content creators host and gate video on xjet-swarma-video and expect transparent, near-real-time micropayment when viewers watch—while keeping files, keys, and pricing power.
+      </div>
+    </section>
+
+<section id="s7">
+      <h2>7) Live vs VOD + media object model</h2>
+
+      <h3>7.1 Presentation modes</h3>
       <table>
         <thead><tr><th>Mode</th><th>Manifest behavior</th><th>Key behavior</th><th>Notes</th></tr></thead>
         <tbody>
@@ -939,7 +1043,7 @@
         </tbody>
       </table>
 
-      <h3>6.2 Object model</h3>
+      <h3>7.2 Object model</h3>
       <ul>
         <li><strong>Title:</strong> stable uid, metadata, access Policy, delivery Policy, current manifest pointer.</li>
         <li><strong>Manifest (versioned):</strong> ordered timeline of SegmentRefs; availability window for live; checksum of structure; creator signature.</li>
@@ -951,7 +1055,7 @@
         <li><strong>Attachment:</strong> chapters, descriptions, content warnings, language of primary audio.</li>
       </ul>
 
-      <h3>6.3 Packaging principles</h3>
+      <h3>7.3 Packaging principles</h3>
       <ul>
         <li>GOP/segment alignment across ABR rungs preferred for seamless switching.</li>
         <li>Encrypt media payload per segment; packaging may resemble fMP4/CMAF-style objects without requiring a single vendor DRM.</li>
@@ -959,7 +1063,7 @@
         <li>Captions: default path supports hard-of-hearing; encryption optional so edges can cache accessibility tracks aggressively when public.</li>
       </ul>
 
-      <h3>6.4 Live-specific rules</h3>
+      <h3>7.4 Live-specific rules</h3>
       <ul>
         <li>Segment duration short enough for latency targets; Key Agent autoscaling or delegated mode strongly recommended.</li>
         <li>Attestation may unlock a <em>time window</em> (“next 2 hours of this live uid”) rather than thousands of individual pre-grants.</li>
@@ -967,17 +1071,17 @@
         <li>Chat/social interaction is out of band unless added as a separate product surface.</li>
       </ul>
 
-      <h3>6.5 Versioning and updates</h3>
+      <h3>7.5 Versioning and updates</h3>
       <ul>
         <li>Edits publish Manifest vN; old versions remain fetchable for open grants until expiry or forced invalidate.</li>
         <li>Re-encode adds renditions without changing title uid.</li>
-        <li>Content warning and rating fields are first-class metadata for discovery filters and review (§14).</li>
+        <li>Content warning and rating fields are first-class metadata for discovery filters and review (§15).</li>
       </ul>
     </section>
-<section id="s7">
-      <h2>7) Requirements and attestations (access path)</h2>
+<section id="s8">
+      <h2>8) Requirements and attestations (access path)</h2>
 
-      <h3>7.1 Requirement types (extensible)</h3>
+      <h3>8.1 Requirement types (extensible)</h3>
       <ul>
         <li><code>goodwill_ack</code> — consent / good faith; typically low trust, tight caps.</li>
         <li><code>puzzle_solve</code> — human challenge or calibrated proof-of-work.</li>
@@ -989,7 +1093,7 @@
         <li>Additional types register schema + verifier + UX copy only.</li>
       </ul>
 
-      <h3>7.2 Access Policy model</h3>
+      <h3>8.2 Access Policy model</h3>
       <ul>
         <li>Boolean composition (<code>anyOf</code> / <code>allOf</code>) over requirements.</li>
         <li>Per-requirement <code>min_trust</code>, optional weights/score targets.</li>
@@ -998,27 +1102,27 @@
         <li>Publisher chooses minimal verification (e.g. goodwill only) or stacked high-assurance paths.</li>
       </ul>
 
-      <h3>7.3 Attestation model</h3>
+      <h3>8.3 Attestation model</h3>
       <ul>
         <li>Signed by verifier issuer; bound to viewer subject (e.g. public key / device binding), content scope, requirement type, proof blob, trust score, issued/expiry, nonce, signature.</li>
         <li>Short-lived; replay-protected; minimal PII (e.g. email hashed with creator salt when needed).</li>
       </ul>
 
-      <h3>7.4 KeyGrant model</h3>
+      <h3>8.4 KeyGrant model</h3>
       <ul>
         <li>Creator-signed; segment- or window-scoped; viewer-bound; expiry; wrapped CEKs or key references; policy hash.</li>
         <li>Independent per segment so edges can cache ciphertext while unlock remains granular.</li>
       </ul>
     </section>
-<section id="s8">
-      <h2>8) Creator monetary experience (pennies-per-view, live balance)</h2>
+<section id="s9">
+      <h2>9) Creator monetary experience (pennies-per-view, live balance)</h2>
       <p>
         Creators should feel paid <strong>as viewing starts</strong>, not after a monthly black box.
         Default economic expectation is <strong>micropayments—pennies (or fractions of a penny) per view, per minute, or per unlocked segment window</strong>—with a dashboard that updates in near real time.
         Large fixed prices remain available; they are not the default mental model.
       </p>
 
-      <h3>8.1 Design goals</h3>
+      <h3>9.1 Design goals</h3>
       <ul>
         <li><strong>Immediate visibility:</strong> when a viewer begins a paid watch path, the creator balance ticks within seconds (target p95 &lt; 5s for ledger credit events).</li>
         <li><strong>Pennies-scale pricing:</strong> first-class support for sub-dollar unlocks and ongoing per-time accruals (e.g. $0.01–$0.10 per view, or $0.001–$0.01 per minute).</li>
@@ -1027,7 +1131,7 @@
         <li><strong>Aligned with playback:</strong> money can accrue on unlock, on first decrypted media, and/or continuously while segments play—not only on abstract “click.”</li>
       </ul>
 
-      <h3>8.2 Pricing primitives (creator-configured)</h3>
+      <h3>9.2 Pricing primitives (creator-configured)</h3>
       <table>
         <thead>
           <tr><th>Primitive</th><th>Typical scale</th><th>When value moves</th></tr>
@@ -1069,7 +1173,7 @@
         Access Policy may still offer non-pay paths. <strong>Monetary paths</strong> are requirement types (or composite paths) that produce a <em>Payment Attestation</em> plus a <em>Ledger Credit</em> event.
       </p>
 
-      <h3>8.3 “Funds as soon as they start viewing”</h3>
+      <h3>9.3 “Funds as soon as they start viewing”</h3>
       <p>Recommended default paid flow (micro):</p>
       <ol>
         <li>Viewer selects a penny-scale path (or auto-selects if only one paid path).</li>
@@ -1084,7 +1188,7 @@
         Engineering truth: show <em>pending</em> immediately from signed playback/payment signals; move to <em>available</em> when the chosen rail’s finality rules say so. Never imply irreversible cash before finality.
       </div>
 
-      <h3>8.4 Ledger model (creator-facing)</h3>
+      <h3>9.4 Ledger model (creator-facing)</h3>
       <ul>
         <li><strong>Pending:</strong> view/payment observed; awaiting rail finality or anti-fraud hold (seconds to minutes for micro-rails; longer only if creator accepts slow chains).</li>
         <li><strong>Available:</strong> counted toward balance; may still have short clawback window for proven fraud.</li>
@@ -1096,7 +1200,7 @@
         Dashboards aggregate by title, hour, and geography without exposing unnecessary viewer PII.
       </p>
 
-      <h3>8.5 Who holds the money (rails)</h3>
+      <h3>9.5 Who holds the money (rails)</h3>
       <table>
         <thead>
           <tr><th>Rail</th><th>Fit for pennies</th><th>Creator sees funds “now”</th><th>Notes</th></tr>
@@ -1139,7 +1243,7 @@
         Optional <strong>opt-in custodial micro-ledger</strong> exists purely for UX (instant pennies, low fees), with automatic sweep rules (e.g. daily or at $1 available).
       </p>
 
-      <h3>8.6 Anti-fraud and penny economics</h3>
+      <h3>9.6 Anti-fraud and penny economics</h3>
       <ul>
         <li><strong>View definition:</strong> configurable—e.g. 3 continuous seconds of decrypted media, or first paid segment grant + progress beacon.</li>
         <li><strong>Replay protection:</strong> one <code>per_view</code> per viewer-root per title per cooldown; metered ticks require monotonic playback proofs (sampled).</li>
@@ -1149,7 +1253,7 @@
         <li><strong>Dust:</strong> sub-cent accruals roll up; withdrawable when above rail dust threshold.</li>
       </ul>
 
-      <h3>8.7 Creator console UX</h3>
+      <h3>9.7 Creator console UX</h3>
       <ul>
         <li><strong>Live ticker:</strong> running available + pending today; sparkline of last 60 minutes.</li>
         <li><strong>Per-title cards:</strong> views started, paid watch-time, effective eCPMv (earnings per thousand paid views), refund/reverse rate.</li>
@@ -1159,7 +1263,7 @@
         <li><strong>Alerts:</strong> first earnings on a title, pending stuck &gt; threshold, reverse spike, Key Agent down blocking paid unlocks.</li>
       </ul>
 
-      <h3>8.8 Viewer UX (so pennies feel fair)</h3>
+      <h3>9.8 Viewer UX (so pennies feel fair)</h3>
       <ul>
         <li>Up-front meter: “~$0.02 to start · ~$0.01/min · cap $0.15 this session.”</li>
         <li>Running session spend while watching; hard stop at cap unless viewer raises it.</li>
@@ -1167,14 +1271,14 @@
         <li>Receipt: tiny itemized session bill exportable as attestation trail.</li>
       </ul>
 
-      <h3>8.9 Relation to free/non-pay requirements</h3>
+      <h3>9.9 Relation to free/non-pay requirements</h3>
       <ul>
         <li>Goodwill, puzzle, email, social, ad-watch paths produce <strong>no</strong> access ledger credits (unless a separate sponsor pays the creator—an optional future “subsidy attestation”).</li>
         <li>Creators may mix: “free with ad” OR “pay $0.05 for no ad.”</li>
-        <li>Delivery rebates to ISPs (§10) remain a <strong>cost</strong> line, never confused with view earnings.</li>
+        <li>Delivery rebates to ISPs (§11) remain a <strong>cost</strong> line, never confused with view earnings.</li>
       </ul>
 
-      <h3>8.10 Signals &amp; APIs (descriptive)</h3>
+      <h3>9.10 Signals &amp; APIs (descriptive)</h3>
       <ul>
         <li><code>POST /v1/money/sessions</code> — open funded watch session (cap, rail, title).</li>
         <li><code>POST /v1/money/events</code> — <code>view_started</code>, <code>meter_tick</code>, <code>session_end</code> (client + optional edge-signed).</li>
@@ -1184,7 +1288,7 @@
         <li>Ledger events are signed and idempotent; KeyGrant issuance may reference <code>session_id</code> + payment attestation.</li>
       </ul>
 
-      <h3>8.11 Defaults (opinionated)</h3>
+      <h3>9.11 Defaults (opinionated)</h3>
       <ul>
         <li>New title template: <code>per_view = $0.02</code> after 3s paid play, optional <code>per_minute = $0.005</code>, session cap <code>$0.20</code>, free preview first segment.</li>
         <li>Live ticker on for all creators with any monetary path enabled.</li>
@@ -1192,7 +1296,7 @@
         <li>MVP may implement prepaid credits + internal ledger sweep before full streaming LN.</li>
       </ul>
 
-      <h3>8.12 Non-goals</h3>
+      <h3>9.12 Non-goals</h3>
       <ul>
         <li>Guaranteeing “YouTube RPM” parity or ad-market CPMs.</li>
         <li>Hiding fees inside unexplained “algorithm” bonuses.</li>
@@ -1200,18 +1304,18 @@
         <li>Silent CDF seizure of creator balances.</li>
       </ul>
     </section>
-<section id="s9">
-      <h2>9) Key Agent availability &amp; delegation</h2>
+<section id="s10">
+      <h2>10) Key Agent availability &amp; delegation</h2>
       <p>The catalog can be highly available while playback still depends on a reachable Key Agent. This section defines how keys stay under creator control without a single home PC becoming a hard outage.</p>
 
-      <h3>9.1 Responsibility split</h3>
+      <h3>10.1 Responsibility split</h3>
       <ul>
         <li><strong>CDF:</strong> relays key requests, caches negative answers briefly, enforces global rate limits, never holds unwrapped content keys.</li>
         <li><strong>Key Agent:</strong> evaluates Policy + Attestations and signs KeyGrants. Authoritative for unlock.</li>
         <li><strong>Creator master key material:</strong> remains creator-controlled (local KMS/HSM or split control). Delegation never implies CDF custody of master keys.</li>
       </ul>
 
-      <h3>9.2 Deployment modes</h3>
+      <h3>10.2 Deployment modes</h3>
       <table>
         <thead><tr><th>Mode</th><th>Where it runs</th><th>Availability posture</th><th>Who holds signing capability</th></tr></thead>
         <tbody>
@@ -1222,7 +1326,7 @@
         </tbody>
       </table>
 
-      <h3>9.3 Delegation model</h3>
+      <h3>10.3 Delegation model</h3>
       <ul>
         <li>Creator issues a <strong>Delegation Grant</strong>: agent identity, allowed title set (or <code>*</code>), max grant TTL, max segments/hour, allowed requirement issuers, geo/policy constraints, expiry, revocation URI.</li>
         <li>Delegated agents sign KeyGrants with an <strong>agent key</strong> that chains to the creator root (certificate or signature chain). Clients and CDF verify the chain.</li>
@@ -1230,7 +1334,7 @@
         <li><strong>Revocation:</strong> creator publishes revocation to CDF; agents must stop; clients reject grants from revoked agents after short cache TTL.</li>
       </ul>
 
-      <h3>9.4 Offline and degraded behavior</h3>
+      <h3>10.4 Offline and degraded behavior</h3>
       <ul>
         <li><strong>Preview / free intro:</strong> still works if Policy allows keyless or pre-authorized intro keys distributed as public preview material.</li>
         <li><strong>Pre-issued grant batches:</strong> optional limited rolling window (e.g. next N segments, short TTL) issued while online; not a substitute for long offline binge unless Policy allows.</li>
@@ -1239,27 +1343,27 @@
         <li><strong>No silent CDF unlock:</strong> fabric must not mint content keys if agents are down.</li>
       </ul>
 
-      <h3>9.5 Health, SLOs, and client UX</h3>
+      <h3>10.5 Health, SLOs, and client UX</h3>
       <ul>
         <li>Agents heartbeat to CDF: latency, queue depth, signing success rate, policy version.</li>
         <li>Title page shows unlock-path health: healthy / degraded / offline.</li>
         <li>Recommended SLO classes: Hobby (no formal SLO), Standard (e.g. 99% monthly unlock API), Professional (multi-region delegated).</li>
       </ul>
 
-      <h3>9.6 Compromise response</h3>
+      <h3>10.6 Compromise response</h3>
       <ul>
         <li>Revoke agent keys; rotate segment CEKs for affected titles when feasible; invalidate outstanding grants; watermark-assisted leak investigation if enabled.</li>
         <li>Re-publish manifests with new key ids; edges keep ciphertext if re-encrypted objects are versioned.</li>
       </ul>
     </section>
-<section id="s10">
-      <h2>10) ISP / edge cache incentives (delivery path)</h2>
+<section id="s11">
+      <h2>11) ISP / edge cache incentives (delivery path)</h2>
 
-      <h3>10.1 Goal</h3>
+      <h3>11.1 Goal</h3>
       <p>See also <a href="#s5">§5 Business order &amp; multi-ISP cache-fill model</a> for normative payment order, diversity incentives, and fill leases.</p>
       <p>Motivate ISPs and neutral edges to hold and serve ciphertext near viewers so origins shed egress and viewers get low latency—<strong>without</strong> moving keys or access payments into the cache.</p>
 
-      <h3>10.2 Value exchange</h3>
+      <h3>11.2 Value exchange</h3>
       <table>
         <thead>
           <tr><th>Party</th><th>Value</th></tr>
@@ -1272,7 +1376,7 @@
         </tbody>
       </table>
 
-      <h3>10.3 Incentive instruments</h3>
+      <h3>11.3 Incentive instruments</h3>
       <ol>
         <li><strong>Transit savings (default, $0):</strong> On-net hits reduce ISP transit and creator egress; no settlement required. Sufficient for many independents and opportunistic caches.</li>
         <li><strong>Origin-egress rebate pool:</strong> Creator sets $/GB and caps; CDF meters verified cache-served bytes; edges claim proportional share. Separate from unlock crypto/goodwill/etc.</li>
@@ -1284,10 +1388,10 @@
         <li><strong>Public/grant tracks:</strong> Education/news/open catalogs funded by consortia/CSR using the same metering path.</li>
       </ol>
 
-      <h3>10.4 Explicit non-incentives for caches</h3>
+      <h3>11.4 Explicit non-incentives for caches</h3>
       <p>Cache rewards are <strong>not</strong> tied to: successful unlock, ad view attestations, email capture, social likes, or creator access revenue—unless a completely separate verifier contract exists. <strong>Delivery Settlement ≠ Access Attestation.</strong></p>
 
-      <h3>10.5 Proof of Delivery (PoD)</h3>
+      <h3>11.5 Proof of Delivery (PoD)</h3>
       <ul>
         <li>Serve bytes matching creator checksum/Merkle leaf.</li>
         <li>Optional short-lived <strong>fetch tokens</strong> authorizing ciphertext GET (not keys).</li>
@@ -1296,7 +1400,7 @@
         <li>Delist/takedown SLA; non-compliance affects eligibility and stakes.</li>
       </ul>
 
-      <h3>10.6 Pricing primitives (creator-configurable)</h3>
+      <h3>11.6 Pricing primitives (creator-configurable)</h3>
       <table>
         <thead>
           <tr><th>Primitive</th><th>Unit</th><th>Typical use</th></tr>
@@ -1312,7 +1416,7 @@
       </table>
       <p>Suggested market comps may be published; creators override, including all-zero (transit-only).</p>
 
-      <h3>10.7 Edge tiers</h3>
+      <h3>11.7 Edge tiers</h3>
       <table>
         <thead>
           <tr><th>Tier</th><th>Commitment</th><th>Earns</th></tr>
@@ -1325,7 +1429,7 @@
         </tbody>
       </table>
 
-      <h3>10.8 Creator delivery modes (UX)</h3>
+      <h3>11.8 Creator delivery modes (UX)</h3>
       <ol>
         <li><strong>Free speed</strong> — caching allowed, $0 budgets.</li>
         <li><strong>Offset my egress</strong> — rebate + cap.</li>
@@ -1333,14 +1437,14 @@
         <li><strong>Launch boost</strong> — time-boxed prefetch bounties.</li>
       </ol>
 
-      <h3>10.9 Routing</h3>
+      <h3>11.9 Routing</h3>
       <ul>
         <li>Clients combine origin URLs, edge bases, and swarm hints; prefer by RTT, integrity score, price, and creator allow/deny ASN lists.</li>
         <li>Multi-edge competition; no mandatory exclusive ISP lock-in.</li>
         <li><strong>Prefetch places ciphertext only.</strong> Instant play still needs access Policy (free intro and/or KeyGrants). Intro keys may be pre-authorized <strong>to viewers</strong>, never deposited at the ISP.</li>
       </ul>
 
-      <h3>10.10 Economic safeguards</h3>
+      <h3>11.10 Economic safeguards</h3>
       <ul>
         <li>Budget caps and soft-pause of <em>paid</em> claims (cache may still serve unpaid).</li>
         <li>Optional anti-duplication signals for cold segments in one metro.</li>
@@ -1362,23 +1466,23 @@
       <h2>Viewer journey (discover to watch to report)</h2>
       <p>This is the viewer-facing path. System internals stay out of the way unless something breaks.</p>
       <ol>
-        <li><strong>Arrive</strong> — localized catalog/search; clear titles, previews, warnings. <a href="#s13">§13</a>, <a href="#s4">§4.3</a></li>
-        <li><strong>Device identity</strong> — ephemeral or recoverable keypair; multi-device if signed in. <a href="#s11">§11</a></li>
-        <li><strong>Preview</strong> — free intro/trailer when Policy allows (may already be edge-cached). <a href="#s12">§12.2</a>, <a href="#s6">§6</a></li>
-        <li><strong>Choose unlock path</strong> — free (goodwill, puzzle, email, social, ad, …) <em>or</em> paid with an upfront meter (“~$0.02 to start · cap $0.15”). <a href="#s7">§7</a>, <a href="#s8">§8.8</a></li>
-        <li><strong>Play</strong> — KeyGrants roll forward; ABR + captions; bytes from edge, swarm, or origin. <a href="#s12">§12.4</a>, <a href="#s6">§6</a></li>
-        <li><strong>Session spend</strong> — running total on paid paths; stop raises stop new grants after a short grace. <a href="#s8">§8</a></li>
-        <li><strong>Report</strong> — spam, unlawful, misleading unlock, etc.; personal “hide” is not a network strike. <a href="#s14">§14</a></li>
-        <li><strong>Daily watch quota</strong> — at most 48 hours of content timeline per day per account (shared devices); soft warnings then KeyGrants stop. <a href="#s15">§15</a></li>
+        <li><strong>Arrive</strong> — localized catalog/search; clear titles, previews, warnings. <a href="#s14">§14</a>, <a href="#s4">§4.3</a></li>
+        <li><strong>Device identity</strong> — ephemeral or recoverable keypair; multi-device if signed in. <a href="#s12">§12</a></li>
+        <li><strong>Preview</strong> — free intro/trailer when Policy allows (may already be edge-cached). <a href="#s13">§13.2</a>, <a href="#s7">§7</a></li>
+        <li><strong>Choose unlock path</strong> — free (goodwill, puzzle, email, social, ad, …) <em>or</em> paid with an upfront meter (“~$0.02 to start · cap $0.15”). <a href="#s8">§8</a>, <a href="#s9">§9.8</a></li>
+        <li><strong>Play</strong> — KeyGrants roll forward; ABR + captions; bytes from edge, swarm, or origin. <a href="#s13">§13.4</a>, <a href="#s7">§7</a></li>
+        <li><strong>Session spend</strong> — running total on paid paths; stop raises stop new grants after a short grace. <a href="#s9">§9</a></li>
+        <li><strong>Report</strong> — spam, unlawful, misleading unlock, etc.; personal “hide” is not a network strike. <a href="#s15">§15</a></li>
+        <li><strong>Daily watch quota</strong> — at most 48 hours of content timeline per day per account (shared devices); soft warnings then KeyGrants stop. <a href="#s16">§16</a></li>
       </ol>
       <div class="callout">
         <strong>Viewer promise:</strong> honest unlock choices, no surprise large holds for penny video, playback works when the creator’s unlock path is healthy, and harmful content can be flagged without needing to understand ISPs or ledgers.
       </div>
     </section>
-<section id="s11">
-      <h2>11) Identity, recovery, multi-device</h2>
+<section id="s12">
+      <h2>12) Identity, recovery, multi-device</h2>
 
-      <h3>11.1 Identity layers</h3>
+      <h3>12.1 Identity layers</h3>
       <table>
         <thead><tr><th>Layer</th><th>Purpose</th><th>Required?</th></tr></thead>
         <tbody>
@@ -1390,14 +1494,14 @@
         </tbody>
       </table>
 
-      <h3>11.2 Viewer registration postures</h3>
+      <h3>12.2 Viewer registration postures</h3>
       <ul>
         <li><strong>Ephemeral:</strong> keypair generated on device; lost on reinstall; suitable for goodwill/puzzle paths.</li>
         <li><strong>Recoverable account:</strong> root key wrapped with user secret, passkey, or social recovery; encrypted backup blob optional (client-chosen storage).</li>
         <li><strong>Linked email/social:</strong> only when user opts in or Policy requires <code>email_verify</code> / social proofs; not mandated by CDF globally.</li>
       </ul>
 
-      <h3>11.3 Multi-device</h3>
+      <h3>12.3 Multi-device</h3>
       <ul>
         <li>Account (if any) authorizes a small set of device keys; each device has its own binding in KeyGrant <code>aud</code>.</li>
         <li>Attestations may be portable to a root identity with a fresh content nonce; grants remain device-bound by default.</li>
@@ -1405,7 +1509,7 @@
         <li>Adding a device: prove control of root (passkey/secret); revoke lost devices immediately.</li>
       </ul>
 
-      <h3>11.4 Recovery</h3>
+      <h3>12.4 Recovery</h3>
       <ul>
         <li><strong>Viewer:</strong> recover root → re-enroll devices → prior grants do not automatically transfer (re-request keys with existing valid Attestations if still unexpired).</li>
         <li><strong>Creator:</strong> offline master backup (paper/HSM/split shamir); recovery runbook required before “Professional” unlock SLO claims.</li>
@@ -1413,53 +1517,53 @@
         <li>CDF does not offer “reset password = get content keys.”</li>
       </ul>
 
-      <h3>11.5 Creator organizations</h3>
+      <h3>12.5 Creator organizations</h3>
       <ul>
         <li>Roles: Owner, Publisher (metadata/manifest), Policy Editor, Key Operator, Finance (delivery budgets), Moderator (respond to notices).</li>
         <li>Separation of duties recommended: Policy Editor ≠ sole Key Operator for large catalogs.</li>
         <li>Audit log of policy changes, delists, delegation, and budget edits.</li>
       </ul>
 
-      <h3>11.6 Privacy defaults</h3>
+      <h3>12.6 Privacy defaults</h3>
       <ul>
         <li>Minimize correlation: opaque viewer ids per creator optional; global advertising profiles are a non-goal.</li>
         <li>Age and jurisdiction signals: prefer local client declarations + creator Policy over central dossiers.</li>
       </ul>
     </section>
-<section id="s12">
-      <h2>12) End-to-end flows</h2>
+<section id="s13">
+      <h2>13) End-to-end flows</h2>
 
-      <h3>12.1 Publish</h3>
+      <h3>13.1 Publish</h3>
       <p>CEA segments → encrypts → uploads → registers metadata, access Policy, optional delivery Policy → optional seed → optional pin/prefetch declarations.</p>
 
-      <h3>12.2 Discover and preview</h3>
+      <h3>13.2 Discover and preview</h3>
       <p>Viewer browses CDF catalog; plays preview/intro per Policy (keyless or pre-authorized). Bytes may come from origin, swarm, or edge ciphertext caches.</p>
 
-      <h3>12.3 Fulfill requirements</h3>
+      <h3>13.3 Fulfill requirements</h3>
       <p>Viewer picks a path; verifiers issue Attestations; publisher-defined strictness applies. No credit-card-centric funnel required.</p>
 
-      <h3>12.4 Unlock and stream</h3>
+      <h3>13.4 Unlock and stream</h3>
       <p>Key Agent checks Policy + trust + replay limits → KeyGrants → client fetches ciphertext (P2P/HTTP/edge) → decrypts locally → rolling window of grants.</p>
 
-      <h3>12.5 Cache warm path</h3>
+      <h3>13.5 Cache warm path</h3>
       <p>Popularity or creator bounty → edge fetches ciphertext from origin or peers → serves regionally → optional PoD → settlement if budgets exist. Keys unchanged.</p>
 
-      <h3>12.6 Takedown / delist</h3>
+      <h3>13.6 Takedown / delist</h3>
       <p>Creator or process flags title/segments → registry updates → edges ACK purge within SLA → paid eligibility affected on failure. Access path stops issuing new grants as Policy demands.</p>
     </section>
-<section id="s13">
-      <h2>13) Internationalization and accessibility</h2>
+<section id="s14">
+      <h2>14) Internationalization and accessibility</h2>
       <ul>
         <li>Localized UI and requirement disclosure before action.</li>
         <li>RTL and caption/subtitle pipelines.</li>
         <li>Clear statement of unlock scope (“next N minutes / M segments”) and whether caching improves speed only.</li>
       </ul>
     </section>
-<section id="s14">
-      <h2>14) Viewer feedback &amp; content review (abuse, spam, unlawful)</h2>
+<section id="s15">
+      <h2>15) Viewer feedback &amp; content review (abuse, spam, unlawful)</h2>
       <p>This subsystem lets viewers and trusted reporters flag problems, routes them through severity-based review, and can <strong>pull very unacceptable content</strong> from discovery, edges, and—via creator duty—origin availability. It complements creator sovereignty: the network cannot silently decrypt private media, but it <strong>can</strong> stop amplifying and locating it.</p>
 
-      <h3>14.1 Goals</h3>
+      <h3>15.1 Goals</h3>
       <ul>
         <li>Fast path for illegal and severe harm.</li>
         <li>Noise-resistant handling of spam and taste disputes.</li>
@@ -1468,7 +1572,7 @@
         <li>No requirement that CDF host or re-encode the underlying bytes.</li>
       </ul>
 
-      <h3>14.2 Report object</h3>
+      <h3>15.2 Report object</h3>
       <ul>
         <li><strong>Target:</strong> title_id, optional segment/time range, preview asset, creator_id, metadata field, user profile/comment if those exist later.</li>
         <li><strong>Category:</strong> spam/scam, copyright, unlawful_severe, unlawful_other, harassment, sexual_exploitation, self_harm, hate_violent, misleading_dangerous, age_inappropriate, other.</li>
@@ -1478,7 +1582,7 @@
         <li><strong>Idempotency:</strong> duplicate reports coalesce into one case.</li>
       </ul>
 
-      <h3>14.3 In-product feedback channels</h3>
+      <h3>15.3 In-product feedback channels</h3>
       <ul>
         <li><strong>Report</strong> on title, creator, preview, and unlock-offer screens.</li>
         <li><strong>Not interested / hide</strong> (personalization only; not a trust-safety strike by itself).</li>
@@ -1487,7 +1591,7 @@
         <li><strong>Trusted flagger</strong> API for NGOs, hotlines, rights-holders with signed assertions.</li>
       </ul>
 
-      <h3>14.4 Severity classes and default actions</h3>
+      <h3>15.4 Severity classes and default actions</h3>
       <table>
         <thead><tr><th>Class</th><th>Examples</th><th>Default system action</th><th>Human review</th></tr></thead>
         <tbody>
@@ -1524,7 +1628,7 @@
         </tbody>
       </table>
 
-      <h3>14.5 Case workflow (content review process)</h3>
+      <h3>15.5 Case workflow (content review process)</h3>
       <ol>
         <li><strong>Intake:</strong> validate schema; fingerprint reporter; attach target snapshot (metadata + hashes + policy version).</li>
         <li><strong>Auto-triage:</strong> match known bad hashes/URLs; spam classifiers; trusted-flagger boost; burst detection (raid reporting).</li>
@@ -1545,7 +1649,7 @@
         <li><strong>Retain:</strong> case timeline under retention policy for audit; minimize media sample storage.</li>
       </ol>
 
-      <h3>14.6 Pull mechanics vs creator-hosted bytes</h3>
+      <h3>15.6 Pull mechanics vs creator-hosted bytes</h3>
       <div class="callout">
         <strong>Pull means network refusal, not magical remote wipe of every USB stick.</strong>
         Very unacceptable content is pulled from the <em>addressable network</em>: catalog, search, previews, edge caches, key relay, and settlement. Creators remain responsible for origin deletion. Non-compliance is handled with strikes, unlisting, and legal process—not by CDF taking master keys.
@@ -1556,7 +1660,7 @@
         <li><strong>Mirror resistance:</strong> new uploads with same perceptual/preview hash auto-queue as S0/S1.</li>
       </ul>
 
-      <h3>14.7 Creator duties and strikes</h3>
+      <h3>15.7 Creator duties and strikes</h3>
       <ul>
         <li>Respond to S1/S2 notices within published SLA.</li>
         <li>Strike ladder: warning → limited discovery → publish freeze → permanent exclusion from CDF.</li>
@@ -1564,7 +1668,7 @@
         <li>Good-faith rapid compliance reduces residual penalties.</li>
       </ul>
 
-      <h3>14.8 Anti-abuse of the reporting system</h3>
+      <h3>15.8 Anti-abuse of the reporting system</h3>
       <ul>
         <li>Rate limits; costliness for brand-new anonymous reporters on S2/S3.</li>
         <li>Detection of coordinated false reporting; reverse penalties for proven bad-faith.</li>
@@ -1572,7 +1676,7 @@
         <li>Competitors cannot delist via volume alone without evidence thresholds.</li>
       </ul>
 
-      <h3>14.9 Automation and human review mix</h3>
+      <h3>15.9 Automation and human review mix</h3>
       <ul>
         <li>Automation: spam, duplicate detection, known-hash S0, phishing URL patterns, sudden metadata spikes.</li>
         <li>Humans: borderline S1/S2, contextual harm, satire/news exceptions, appeals.</li>
@@ -1580,14 +1684,14 @@
         <li>Quality: dual-review for permanent S0/S1 when feasible; sampled QA on automated S3.</li>
       </ul>
 
-      <h3>14.10 Transparency and metrics</h3>
+      <h3>15.10 Transparency and metrics</h3>
       <ul>
         <li>Periodic report: volume by category, median time-to-shield, time-to-decision, overturn rate on appeal, edge purge compliance.</li>
         <li>Creator dashboard: open cases, required actions, strike status.</li>
         <li>User: confirmation that report was received and closed category (without leaking sensitive details).</li>
       </ul>
 
-      <h3>14.11 APIs (descriptive)</h3>
+      <h3>15.11 APIs (descriptive)</h3>
       <ul>
         <li><code>POST /v1/reports</code> — create report.</li>
         <li><code>GET /v1/reports/{id}</code> — status for reporter.</li>
@@ -1599,17 +1703,17 @@
         <li><code>GET /v1/blocklist/delta</code> — client/edge block list updates.</li>
       </ul>
 
-      <h3>14.12 Relation to other sections</h3>
+      <h3>15.12 Relation to other sections</h3>
       <ul>
-        <li>§7 Requirements: “misleading unlock” reports can freeze a Policy version.</li>
-        <li>§10 Edges: purge SLA and settlement coupling.</li>
-        <li>§17 / §16: legal skeleton and ToS hooks.</li>
-        <li>§9: blocked titles skip key relay regardless of agent uptime.</li>
+        <li>§8 Requirements: “misleading unlock” reports can freeze a Policy version.</li>
+        <li>§11 Edges: purge SLA and settlement coupling.</li>
+        <li>§18 / §17: legal skeleton and ToS hooks.</li>
+        <li>§10: blocked titles skip key relay regardless of agent uptime.</li>
       </ul>
     </section>
 
-    <section id="s15">
-      <h2>15) Account watch quotas (max 48 hours of content per day)</h2>
+    <section id="s16">
+      <h2>16) Account watch quotas (max 48 hours of content per day)</h2>
       <p>
         End accounts are limited to a <strong>reasonable daily diet of streams</strong>:
         by default no more than <strong>48 hours of media timeline</strong> per quota day,
@@ -1617,7 +1721,7 @@
         This deters farm-scale re-streaming while remaining generous for real fans.
       </p>
 
-      <h3>15.1 Goals</h3>
+      <h3>16.1 Goals</h3>
       <ul>
         <li>Cap abuse and industrial scraping of unlock + play paths.</li>
         <li>Keep casual and heavy human viewing comfortable (48h/day is a high ceiling).</li>
@@ -1625,7 +1729,7 @@
         <li>Prefer <strong>watch time</strong> over crude “number of titles opened.”</li>
       </ul>
 
-      <h3>15.2 Primary meter: watch time</h3>
+      <h3>16.2 Primary meter: watch time</h3>
       <table>
         <thead>
           <tr><th>Meter</th><th>Definition</th><th>Default limit</th></tr>
@@ -1653,7 +1757,7 @@
         Rolling 24h is an allowed alternate but must be disclosed in UX.
       </p>
 
-      <h3>15.3 What counts toward 48 hours</h3>
+      <h3>16.3 What counts toward 48 hours</h3>
       <ul>
         <li><strong>Counts:</strong> decrypted playback progress on unlocked titles (VOD timeline or live tune-in wall clock while grants are active).</li>
         <li><strong>Charge basis:</strong> media timeline (ABR does not multiply hours by bitrate).</li>
@@ -1663,7 +1767,7 @@
         <li><strong>Seeking (v1):</strong> charge playhead advances with simple anti-spam; refine later if needed.</li>
       </ul>
 
-      <h3>15.4 Who owns the bucket</h3>
+      <h3>16.4 Who owns the bucket</h3>
       <table>
         <thead>
           <tr><th>Identity</th><th>Budget</th></tr>
@@ -1688,7 +1792,7 @@
         (otherwise bots purchase infinite play). A higher cap requires an explicit product SKU (e.g. “pro pass”), not silence.
       </p>
 
-      <h3>15.5 Enforcement path</h3>
+      <h3>16.5 Enforcement path</h3>
       <ol>
         <li>Viewer opens or renews playback → client requests a <strong>quota lease</strong> for <code>session_id</code>.</li>
         <li>Quota service (CDF-hosted or creator-delegated under network rules) returns remaining seconds or <code>429 QUOTA_EXCEEDED</code>.</li>
@@ -1701,7 +1805,7 @@
         Edges may still hold ciphertext; without keys, over-quota accounts cannot play.
       </div>
 
-      <h3>15.6 Concurrent streams</h3>
+      <h3>16.6 Concurrent streams</h3>
       <ul>
         <li>Each active lease holds one concurrency slot.</li>
         <li>Heartbeat expiry (e.g. 1–2 minutes) frees slots when players die.</li>
@@ -1711,7 +1815,7 @@
         Note: watch-time should accrue <strong>per active session</strong> (parallel streams burn budget faster), which further discourages fan-out.
       </p>
 
-      <h3>15.7 Network vs creator policy</h3>
+      <h3>16.7 Network vs creator policy</h3>
       <ul>
         <li><strong>Network ceiling:</strong> 48h/day and concurrency defaults (anti-farm floor).</li>
         <li><strong>Creators may tighten</strong> per title or catalog (e.g. max 6h/day on my content).</li>
@@ -1719,7 +1823,7 @@
         <li>Title-level <code>quota_exempt</code> only for short previews or explicitly allowed public packs.</li>
       </ul>
 
-      <h3>15.8 Defaults (normative MVP)</h3>
+      <h3>16.8 Defaults (normative MVP)</h3>
       <table>
         <thead>
           <tr><th>Knob</th><th>Default</th></tr>
@@ -1736,7 +1840,7 @@
         </tbody>
       </table>
 
-      <h3>15.9 UX</h3>
+      <h3>16.9 UX</h3>
       <ul>
         <li>Account page: used / remaining hours; reset time.</li>
         <li>Soft warnings near 80% and 95% of daily budget.</li>
@@ -1744,7 +1848,7 @@
         <li>Concurrency conflict: “Too many devices playing—stop one to continue.”</li>
       </ul>
 
-      <h3>15.10 APIs (descriptive)</h3>
+      <h3>16.10 APIs (descriptive)</h3>
       <ul>
         <li><code>GET /v1/quota/me</code> — used, limit, concurrent, resets_at.</li>
         <li><code>POST /v1/quota/leases</code> — open session lease or 429.</li>
@@ -1753,7 +1857,7 @@
         <li>KeyGrant requests reference <code>lease_id</code> + account binding.</li>
       </ul>
 
-      <h3>15.11 Anti-bypass</h3>
+      <h3>16.11 Anti-bypass</h3>
       <ul>
         <li>Budget on viewer root, not cookies alone.</li>
         <li>Leases bound to device key + session id.</li>
@@ -1762,12 +1866,12 @@
         <li>Optional later: fetch tokens for ciphertext tied to lease (byte-leech friction).</li>
       </ul>
 
-      <h3>15.12 Relation to other sections</h3>
+      <h3>16.12 Relation to other sections</h3>
       <ul>
-        <li><a href="#s11">§11</a> Identity — recoverable root owns the 48h pool.</li>
-        <li><a href="#s9">§9</a> Key Agent — refuses grants without quota lease.</li>
-        <li><a href="#s8">§8</a> Money — pennies do not auto-lift quota.</li>
-        <li><a href="#s7">§7</a> Policy — creator tighten + preview exempt flags.</li>
+        <li><a href="#s12">§12</a> Identity — recoverable root owns the 48h pool.</li>
+        <li><a href="#s10">§10</a> Key Agent — refuses grants without quota lease.</li>
+        <li><a href="#s9">§9</a> Money — pennies do not auto-lift quota.</li>
+        <li><a href="#s8">§8</a> Policy — creator tighten + preview exempt flags.</li>
         <li><a href="#journey-viewer">Viewer journey</a> — soft warnings during play.</li>
       </ul>
 
@@ -1787,19 +1891,19 @@
         and the public can believe the network is not a free-for-all dumpster fire.</p>
     </div>
 
-<section id="s16">
-      <h2>16) CDF business, funding, ToS &amp; trust-safety skeleton</h2>
+<section id="s17">
+      <h2>17) CDF business, funding, ToS &amp; trust-safety skeleton</h2>
 
-      <h3>16.1 What CDF may charge for (illustrative)</h3>
+      <h3>17.1 What CDF may charge for (illustrative)</h3>
       <ul>
         <li>Control-plane metered API (registry publishes, search, key relay).</li>
         <li>Optional verified-creator or custom domain features.</li>
         <li>Delivery settlement processing fees when creators fund ISP rebates (not a cut of access crypto to creators).</li>
         <li>Grants, memberships, or public funding for the neutral fabric.</li>
       </ul>
-      <p>CDF <strong>does not</strong> take custody of viewer access payments or tip funds meant for creators <em>by default</em>. Creators may opt into a disclosed micro-ledger for instant penny UX with scheduled sweeps—see <a href="#s8">§8 Creator monetary experience</a>.</p>
+      <p>CDF <strong>does not</strong> take custody of viewer access payments or tip funds meant for creators <em>by default</em>. Creators may opt into a disclosed micro-ledger for instant penny UX with scheduled sweeps—see <a href="#s9">§9 Creator monetary experience</a>.</p>
 
-      <h3>16.2 Contractual surfaces (skeleton)</h3>
+      <h3>17.2 Contractual surfaces (skeleton)</h3>
       <table>
         <thead><tr><th>Document</th><th>Parties</th><th>Covers</th></tr></thead>
         <tbody>
@@ -1812,7 +1916,7 @@
         </tbody>
       </table>
 
-      <h3>16.3 Trust-safety pillars</h3>
+      <h3>17.3 Trust-safety pillars</h3>
       <ul>
         <li><strong>Metadata-plane enforcement:</strong> delist, de-rank, freeze publish rights, label, geo-hide pointers.</li>
         <li><strong>Creator-plane enforcement:</strong> notices to remove or restrict objects in origin storage; non-response escalates to registry removal and edge purge.</li>
@@ -1820,34 +1924,34 @@
         <li><strong>Client-plane signals:</strong> warning interstitials, age gates, reduced discovery—not a replacement for delist of illegal material.</li>
       </ul>
 
-      <h3>16.4 Prohibited and restricted classes (skeleton)</h3>
+      <h3>17.4 Prohibited and restricted classes (skeleton)</h3>
       <ul>
         <li><strong>Zero-tolerance illegal:</strong> e.g. CSAM, certain terrorism content—immediate delist, edge purge, account freeze, preserve evidence under law, report to appropriate authorities where required.</li>
         <li><strong>Rapid takedown:</strong> clear piracy per valid notice, malware/phishing pretenses, violent threats, non-consensual intimate imagery per policy.</li>
         <li><strong>Policy-restricted:</strong> adult content, graphic violence, medical misinformation, etc.—labeling, age-gating, regional limits, optional discovery exclusion rather than always global delete.</li>
         <li><strong>Spam / scams:</strong> deceptive metadata, engagement farming, fraudulent requirement funnels—rate limits, publish freezes, verifier blocks.</li>
       </ul>
-      <p>Exact legal definitions are jurisdiction-specific; the system supplies <em>severity-based workflows</em> (§14) so operators can map local law without redesigning the fabric.</p>
+      <p>Exact legal definitions are jurisdiction-specific; the system supplies <em>severity-based workflows</em> (§15) so operators can map local law without redesigning the fabric.</p>
 
-      <h3>16.5 Data protection skeleton</h3>
+      <h3>17.5 Data protection skeleton</h3>
       <ul>
         <li>Lawful basis and retention limits for reports, emails, PoD receipts, logs.</li>
         <li>Export/delete for account-linked PII; on-device keys remain user-controlled.</li>
         <li>Breach notification process for CDF-held personal data.</li>
       </ul>
     </section>
-<section id="s17">
-      <h2>17) Governance, moderation, compliance</h2>
+<section id="s18">
+      <h2>18) Governance, moderation, compliance</h2>
       <ul>
         <li>CDF holds pointers and policy, not the media corpus; creators remain custodians of bytes and keys.</li>
         <li>Abuse reporting on metadata/previews; jurisdictional hints and geofence <em>tools</em> for creators.</li>
         <li>Notice workflows to creators; edges honor delist for cached ciphertext.</li>
         <li>Legal risk of metadata indexes remains an open operational/legal design area.</li>
       </ul>
-      <p>See also <a href="#s16">§16 CDF business / ToS / trust-safety</a> and <a href="#s14">§14 Viewer feedback &amp; content review</a> for operational enforcement, severity classes, and pull processes.</p>
+      <p>See also <a href="#s17">§17 CDF business / ToS / trust-safety</a> and <a href="#s15">§15 Viewer feedback &amp; content review</a> for operational enforcement, severity classes, and pull processes.</p>
     </section>
-<section id="s18">
-      <h2>18) Security, privacy, abuse</h2>
+<section id="s19">
+      <h2>19) Security, privacy, abuse</h2>
       <ul>
         <li>Signatures on metadata, manifests, attestations, key grants, edge registration, and PoD claims.</li>
         <li>Viewer binding on attestations and grants; nonces; short TTLs.</li>
@@ -1858,8 +1962,8 @@
         <li>Minimal PII; device bindings rotate.</li>
       </ul>
     </section>
-<section id="s19">
-      <h2>19) Observability, reliability, SLAs</h2>
+<section id="s20">
+      <h2>20) Observability, reliability, SLAs</h2>
       <ul>
         <li>Anycast/control-plane multi-region; idempotent APIs.</li>
         <li>Soft SLAs on verifiers with fallback unlock paths where Policy allows.</li>
@@ -1868,8 +1972,8 @@
         <li>Targets (product intent): control plane very high availability; media plane best-effort with degradation to origin.</li>
       </ul>
     </section>
-<section id="s20">
-      <h2>20) Scalability and cost posture</h2>
+<section id="s21">
+      <h2>21) Scalability and cost posture</h2>
       <ul>
         <li>Long tail: origin HTTP + small swarms + opportunistic cache.</li>
         <li>Hits: large swarms + pin/prefetch + paid or unpaid regional caches.</li>
@@ -1887,38 +1991,38 @@
         Open questions stay honest; they do not block the first great release.</p>
     </div>
 
-<section id="s21">
-      <h2>21) Data model (conceptual)</h2>
+<section id="s22">
+      <h2>22) Data model (conceptual)</h2>
       <ul>
         <li><strong>Creator:</strong> ids, public keys, payout endpoints for <em>access</em> crypto (non-custodial), verifier allow/deny lists, delivery budgets and pin prefs, locales.</li>
         <li><strong>Title:</strong> uid, manifest, metadata, <strong>access Policy</strong>, <strong>delivery Policy</strong>, preview assets.</li>
         <li><strong>Segment:</strong> guid, size, checksum, storage URLs, encryption envelope refs, privacy-preserving popularity.</li>
-        <li><strong>Attestation / KeyGrant:</strong> as in §7.</li>
+        <li><strong>Attestation / KeyGrant:</strong> as in §8.</li>
         <li><strong>Edge:</strong> operator id, keys, regions, tier, integrity score.</li>
         <li><strong>DeliveryClaim:</strong> PoD evidence, amounts, status.</li>
         <li><strong>DelistEvent:</strong> scope, urgency, ACKs from edges.</li>
       </ul>
     </section>
-<section id="s22">
-      <h2>22) APIs (interface descriptions, not code)</h2>
+<section id="s23">
+      <h2>23) APIs (interface descriptions, not code)</h2>
 
-      <h3>22.1 Discovery</h3>
+      <h3>23.1 Discovery</h3>
       <p>Catalog search; title metadata; manifest summary; preview policy; localized offer copy.</p>
 
-      <h3>22.2 Requirements broker</h3>
+      <h3>23.2 Requirements broker</h3>
       <ul>
         <li><strong>Offer</strong> current access Policy and unlock path UX.</li>
         <li><strong>Start / complete</strong> actions → challenges and Attestations.</li>
         <li><strong>Fetch</strong> attestation status; idempotency keys throughout.</li>
       </ul>
 
-      <h3>22.3 Key brokering</h3>
+      <h3>23.3 Key brokering</h3>
       <ul>
         <li><strong>Request</strong> KeyGrants with Attestations + viewer binding → grants or reasons.</li>
         <li><strong>Revoke</strong> grants (creator-initiated); short cache TTLs on clients.</li>
       </ul>
 
-      <h3>22.4 Edge / delivery control</h3>
+      <h3>23.4 Edge / delivery control</h3>
       <ul>
         <li>Edge <strong>register</strong> (region, ASN, capacity, protocols, tier).</li>
         <li><strong>Hints</strong> feed: popularity, pin sets, bounty manifests, delists.</li>
@@ -1927,8 +2031,8 @@
         <li>No key material in these APIs.</li>
       </ul>
     </section>
-<section id="s23">
-      <h2>23) Interoperability contracts (summary)</h2>
+<section id="s24">
+      <h2>24) Interoperability contracts (summary)</h2>
       <ul>
         <li>Viewer identity abstraction (keypair/DID-friendly).</li>
         <li>Attestation envelope (issuer, subject, scope, expiry, nonce, proof, trust, sig).</li>
@@ -1939,8 +2043,8 @@
         <li>Hard separation: <strong>attestation ledger</strong> vs <strong>delivery settlement ledger</strong>.</li>
       </ul>
     </section>
-<section id="s24">
-      <h2>24) Extensibility</h2>
+<section id="s25">
+      <h2>25) Extensibility</h2>
       <ul>
         <li>New requirement types: schema, verifier, UX, Policy ops.</li>
         <li>New chains/wallets for crypto receipts.</li>
@@ -1948,10 +2052,10 @@
         <li>New settlement instruments for delivery without touching access Policy.</li>
       </ul>
     </section>
-<section id="s25">
-      <h2>25) Architecture diagrams</h2>
+<section id="s26">
+      <h2>26) Architecture diagrams</h2>
 
-      <h3>25.1 System context</h3>
+      <h3>26.1 System context</h3>
       <figure class="diagram" aria-label="System context diagram">
         <div class="lane-title">Control plane vs media plane</div>
         <div class="flow">
@@ -1973,7 +2077,7 @@
         <figcaption>Metadata, attestations, grants, reports, and purge orders travel on the CDF plane. Encrypted media moves on origin, swarm, and edge paths.</figcaption>
       </figure>
 
-      <h3>25.2 Unlock sequence</h3>
+      <h3>26.2 Unlock sequence</h3>
       <figure class="diagram" aria-label="Unlock flow">
         <div class="flow">
           <div class="box"><strong>1. Discover</strong><span>Catalog + preview</span></div>
@@ -1989,7 +2093,7 @@
         <figcaption>If title is moderation-blocked, steps 4–5 fail closed even when bytes still exist somewhere offline.</figcaption>
       </figure>
 
-      <h3>25.3 Report → review → pull</h3>
+      <h3>26.3 Report → review → pull</h3>
       <figure class="diagram" aria-label="Moderation flow">
         <div class="flow">
           <div class="box"><strong>Viewer / flagger</strong><span>Report + evidence</span></div>
@@ -2010,7 +2114,7 @@
         <figcaption>Very unacceptable content is removed from network addressability quickly; origin deletion is enforced through creator duty and strikes.</figcaption>
       </figure>
 
-      <h3>25.5 Pennies-per-view money path</h3>
+      <h3>26.5 Pennies-per-view money path</h3>
       <figure class="diagram" aria-label="Creator monetary flow">
         <div class="flow">
           <div class="box"><strong>Viewer session</strong><span>Cap · micro-rail</span></div>
@@ -2026,7 +2130,7 @@
         <figcaption>KeyGrants follow Policy + payment attestation; ISP delivery rebates stay on a separate cost ledger.</figcaption>
       </figure>
 
-      <h3>25.4 Key Agent delegation</h3>
+      <h3>26.4 Key Agent delegation</h3>
       <figure class="diagram" aria-label="Delegation">
         <div class="flow">
           <div class="box"><strong>Creator root</strong><span>Master policy &amp; keys</span></div>
@@ -2042,7 +2146,7 @@
     </section>
 
     
-      <h3>25.6 Multi-ISP cache business flow</h3>
+      <h3>26.6 Multi-ISP cache business flow</h3>
       <figure class="diagram" aria-label="Multi-ISP cache business order">
         <div class="flow">
           <div class="box"><strong>1. Viewer pennies</strong><span>Creator ledger</span></div>
@@ -2057,9 +2161,10 @@
         </div>
         <figcaption>Access earnings and delivery settlement stay on separate ledgers. Block/purge can halt step 3–5.</figcaption>
       </figure>
-<section id="s26">
-      <h2>26) Glossary</h2>
+<section id="s27">
+      <h2>27) Glossary</h2>
       <dl class="glossary">
+        <dt>Content creator</dt><dd>Principal who publishes video and expects payment on paid views while retaining storage, keys, and policy control.</dd>
         <dt>ABR</dt><dd>Adaptive bitrate ladder of renditions for varying network/device conditions.</dd>
         <dt>Attestation</dt><dd>Signed claim that a viewer satisfied a Requirement, with trust score and expiry.</dd>
         <dt>Block list</dt><dd>Distributed set of title/segment ids that clients and edges must not present or serve.</dd>
@@ -2090,8 +2195,8 @@
         <dt>Watch session</dt><dd>Funded viewer period binding payment rail, title, caps, and KeyGrant extensions.</dd>
       </dl>
     </section>
-<section id="s27">
-      <h2>27) MVP roadmap</h2>
+<section id="s28">
+      <h2>28) MVP roadmap</h2>
       <div class="roadmap">
         <div class="phase">
           <h4>Phase 0 — Foundations</h4>
@@ -2146,8 +2251,8 @@
       </div>
       <p class="callout"><strong>MVP success bar:</strong> a creator can publish encrypted VOD from their own bucket, set a non-card unlock rule, viewers play through HTTP, and severe abuse reports can delist and purge addressability without the CDF ever holding master keys or access funds.</p>
     </section>
-<section id="s28">
-      <h2>28) Open questions and risks</h2>
+<section id="s29">
+      <h2>29) Open questions and risks</h2>
       <ul>
         <li>Standard proof-of-attention without invasive tracking.</li>
         <li>Disputes/refunds when access value was goodwill, puzzle, or non-custodial crypto.</li>
@@ -2157,7 +2262,7 @@
         <li>Zero-rating / telco billing integrations as partner-specific extensions.</li>
         <li>Cooperative multi-ISP cold-start vs pure competition.</li>
         <li>Fair cache fill when many edges race to store the same cold object — addressed normatively in <a href="#s5">§5</a> (fill leases, replica caps, diversity pay); residual: cell map politics and federated coordinators.</li>
-        <li>Key Agent offline behavior under flash crowds (mitigations in §9; residual risk remains).</li>
+        <li>Key Agent offline behavior under flash crowds (mitigations in §10; residual risk remains).</li>
         <li>False-positive rate of hash/match lists vs creator sovereignty.</li>
         <li>Who pays for human review at scale; appeals fairness across jurisdictions.</li>
         <li>Micropayment rail portability and tax reporting for penny balances across borders.</li>
@@ -2169,7 +2274,7 @@
       <p><strong>xjet-swarma-video</strong> high-level design.</p>
       <p>Reading order follows creator and viewer journeys; § numbers match the journey-first reading order.</p>
       <p>High-level design document · implementation-agnostic · access path, delivery path, trust-safety pull path, and creator earnings ledger kept separate by design.</p>
-      <p>Parts A–E · sections §1–§28 in reading order ·  File: <code>creator-hosted-video-network-design.html</code></p>
+      <p>Parts A–E · sections §1–§29 in reading order ·  File: <code>creator-hosted-video-network-design.html</code></p>
     </footer>
   </div>
 </body>
