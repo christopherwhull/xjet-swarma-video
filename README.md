@@ -214,6 +214,7 @@ See [the full roadmap (§28)](docs/design.md#s28).
 | --- | --- |
 | **This README** | GitHub-native project introduction and current direction. |
 | **[MVP open questions](openquestions.md)** | First-release decisions, proposed scope reductions, and measurable release criteria still to resolve. |
+| **[Central metadata service](docs/metadata-service.md)** | First-release service boundary, data authority, client interface, and operational targets. |
 | **[Executive overview](docs/overview.md)** | Publisher responsibilities, viewer choice, community ownership, and the business proposition. |
 | **[Full design](docs/design.md)** | Architecture, journeys, proposed interfaces, economic boundaries, and acceptance criteria. |
 | **[Video proposal comparison](docs/video-comparison.md)** | Timestamped original goals, design coverage, intentional differences, and gaps. |
@@ -222,7 +223,7 @@ All document links above render directly on GitHub. Styled originals remain avai
 
 ### Updating the documentation
 
-The HTML pages are the editing source; their Markdown counterparts are generated for GitHub. After editing HTML, run `pwsh -NoProfile -File scripts/Sync-GitHubDocs.ps1` from the repository root and include the regenerated pages with the source changes. The script requires [Pandoc](https://pandoc.org/installing.html) (tested with 3.8.2.1); use `-PandocPath` if it is not on your PATH. It preserves section anchors and timestamps, rewrites local navigation, and converts CSS-dependent diagrams to text flows. Edit this README directly.
+The executive overview, full design, and video comparison pages are generated from HTML sources. After editing those sources, run `pwsh -NoProfile -File scripts/Sync-GitHubDocs.ps1` from the repository root and include the regenerated pages with the source changes. The script requires [Pandoc](https://pandoc.org/installing.html) (tested with 3.8.2.1); use `-PandocPath` if it is not on your PATH. It preserves section anchors and timestamps, rewrites local navigation, and converts CSS-dependent diagrams to text flows. Edit `README.md`, `openquestions.md`, and `docs/metadata-service.md` directly.
 
 **Original inspiration:** [xjet — “At last, something bigger and better than YouTube”](https://www.youtube.com/watch?v=eEjYXw3j4pM). This is a proposal, not a demo of this repository. Our non-injection policy, access payments, and separate peer compensation deliberately differ from its portal pre-roll advertising model.
 
