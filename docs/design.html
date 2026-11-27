@@ -491,6 +491,8 @@
       <h2>2) Core principles</h2>
       <ul>
         <li><strong>Creator sovereignty:</strong> Content and encryption keys remain with creators; release is policy-driven.</li>
+        <li><strong>No platform commercial injection:</strong> The platform does not insert ads, promotions, or other unsolicited commercial material into the creator–viewer relationship. Quality questionnaires are the only platform-inserted engagement; necessary playback, consent, payment, and safety controls are operational UI, not advertising inventory.</li>
+        <li><strong>Bilateral overlay consent:</strong> Optional overlays remain hidden unless both creator and viewer have explicitly opted in before display. Publication, payment, gift acceptance, or continued playback is not overlay consent. See §7.6.</li>
         <li><strong>Open storage:</strong> Any S3-compatible store (MinIO, major clouds, USB-backed nodes, etc.).</li>
         <li><strong>Hybrid delivery:</strong> P2P swarms for scale; HTTP/S3 (origin or edge) for long tail and poor swarm health.</li>
         <li><strong>Verification-agnostic access:</strong> Access is not “credit card checkout.” Requirements are API-described (goodwill, puzzle, email, social proof, crypto receipt, ad attention, allowlists, etc.). Publishers choose how little or how much to verify.</li>
@@ -532,7 +534,7 @@
         <li><strong>Verification broker:</strong> pluggable verifier adapters → signed Attestations; publisher-defined depth of checking.</li>
         <li><strong>Key request broker:</strong> relays key requests to creator Key Agents; returns KeyGrants or structured failure reasons.</li>
         <li><strong>Edge registry &amp; delivery control:</strong> register ISP/edge nodes; publish popularity hints, pin/prefetch manifests, delist streams; meter Proof of Delivery; optional settlement credits (separate from attestations).</li>
-        <li><strong>Analytics:</strong> privacy-preserving counters (popularity, hit rates); raw playback graphs only if creator opts in.</li>
+        <li><strong>Analytics:</strong> centralized collection of playback and interaction events; creator and platform operator share aggregate overviews, while per-viewer detail is encrypted for the relevant creator only. See §20.1.</li>
       </ul>
 
       <h3>4.4 Viewer applications</h3>
@@ -1077,6 +1079,19 @@
         <li>Re-encode adds renditions without changing title uid.</li>
         <li>Content warning and rating fields are first-class metadata for discovery filters and review (§15).</li>
       </ul>
+
+      <h3>7.6 Embedded sponsorship, overlays, and quality questionnaires</h3>
+      <p><strong>The creator–viewer relationship is not platform advertising inventory.</strong> CDF, player operators, and ISP/edge nodes must not insert, replace, or splice advertising into the media or use overlays to bypass this rule. The platform may introduce quality questionnaires, not commercial interruptions.</p>
+      <ul>
+        <li><strong>Creator-embedded material:</strong> sponsor reads, product placements, and banners already encoded by the creator are part of the published video, not platform injections or optional overlay tracks. Disclose sponsorship; do not promise that payment removes it unless the creator supplies an appropriate alternate edit.</li>
+        <li><strong>Optional overlays:</strong> creator-provided or creator-authorized text/HTML popups are separate presentation metadata, not a new video codec. Bind them to a creator-signed title/manifest version; caches may deliver but never alter or inject them.</li>
+        <li><strong>Two affirmative permissions:</strong> before any optional overlay is shown, require creator authorization and explicit viewer opt-in to the disclosed overlay scope (title/creator, purpose, and categories). Default off; missing, stale, or unverifiable permission means do not display. An initial consent prompt uses neutral player settings, not a preview of the promotional overlay.</li>
+        <li><strong>Withdrawal and changes:</strong> either side can revoke permission; hide active overlays and stop future ones. Material changes outside the agreed scope require renewed consent. Do not treat buying a view, accepting a gift, or choosing another unlock path as implied permission.</li>
+        <li><strong>Safe rendering:</strong> render text and allowlisted HTML formatting through constrained player UI; no scripts, iframes, tracking pixels, automatic navigation, or arbitrary remote resources. Overlays must not imitate payment, gift, safety, or player controls, or obstruct captions and accessibility controls.</li>
+        <li><strong>Quality questionnaires:</strong> clearly identify platform-origin questions about content/playback quality, keep them brief, accessible, dismissible, and frequency-limited. They must not contain ads, sponsor solicitations, or disguised commercial surveys. Answers are voluntary, not a payment or KeyGrant requirement; minimize response data and do not repurpose it for advertising profiles.</li>
+        <li><strong>Operational boundaries:</strong> captions, requested accessibility features, essential player controls, and required safety/legal notices are not optional commercial overlays. Do not label promotions as operational notices or quality questions to evade consent.</li>
+        <li><strong>Acceptance checks:</strong> test all four creator/viewer consent combinations; only both-enabled displays optional overlays. Also test revocation during playback, changed scope, absent consent offline, gift redemption without consent, and cache attempts to inject unsigned overlays.</li>
+      </ul>
     </section>
 <section id="s8">
       <h2>8) Requirements and attestations (access path)</h2>
@@ -1088,7 +1103,7 @@
         <li><code>email_verify</code> — mailbox control; optional domain rules.</li>
         <li><code>social_like</code> (or follow/share) — proof via platform API or delegated attest service.</li>
         <li><code>crypto_payment</code> — receipt of transfer to creator-controlled destination; configurable chain, asset, amount, confirmations.</li>
-        <li><code>watch_ad</code> — proof-of-attention for N seconds.</li>
+        <li><code>watch_ad</code> — optional creator-arranged sponsor path, never platform-injected advertising. Any overlay presentation requires bilateral consent under §7.6 before display; selecting an unlock path alone is not consent. Display/timing telemetry is not proof of human attention.</li>
         <li><code>allowlist_token</code> — code, pass, subscription, token-gate, creator credential.</li>
         <li>Additional types register schema + verifier + UX copy only.</li>
       </ul>
@@ -1274,7 +1289,7 @@
       <h3>9.9 Relation to free/non-pay requirements</h3>
       <ul>
         <li>Goodwill, puzzle, email, social, ad-watch paths produce <strong>no</strong> access ledger credits (unless a separate sponsor pays the creator—an optional future “subsidy attestation”).</li>
-        <li>Creators may mix: “free with ad” OR “pay $0.05 for no ad.”</li>
+        <li>Creators may offer a disclosed sponsor-supported path alongside a paid path, but the platform injects no ads. Optional overlays require both parties’ prior opt-in (§7.6). “No additional overlays” does not mean creator-embedded sponsorship has been removed; paid and gifted access never imply overlay consent.</li>
         <li>Delivery rebates to ISPs (§11) remain a <strong>cost</strong> line, never confused with view earnings.</li>
       </ul>
 
@@ -1303,6 +1318,25 @@
         <li>Forcing every viewer to pay—free requirement paths remain core.</li>
         <li>Silent CDF seizure of creator balances.</li>
       </ul>
+
+      <h3>9.13 Gifted views — “userxyz bought you a view”</h3>
+      <p>A viewer may recommend a title and purchase a <strong>gift entitlement</strong> for another viewer. Recommendations alone remain free; a paid gift adds creator-defined access. This is entitlement gifting, <strong>not transfer of content keys</strong> or a general-purpose messaging feature.</p>
+      <ol>
+        <li><strong>Purchase:</strong> sender selects a creator-enabled gift offer for a title, with explicit scope and total cost: one view, a fixed access window, or a capped playback allowance. The payment rail routes access value to the creator; delivery settlement remains separate.</li>
+        <li><strong>Address:</strong> gift targets a recipient account or an unguessable, single-use claim link when the recipient is unknown. Link possession authorizes claiming an untargeted gift; targeted gifts additionally require the intended account. Bearer tokens must not appear in analytics, referrers, or ordinary logs.</li>
+        <li><strong>Accept:</strong> recipient sees “userxyz bought you a view of [Title]” with preview, scope, expiry, Accept, and Decline. Redemption proves recipient account/device control and atomically binds the entitlement to that recipient; concurrent claims cannot redeem it twice.</li>
+        <li><strong>Unlock:</strong> the creator Key Agent validates the redeemed entitlement and remaining requirements, then issues fresh recipient-bound KeyGrants. Neither the sender’s keys nor their existing grants are shared.</li>
+      </ol>
+      <ul>
+        <li><strong>Additional purchase by default:</strong> gifting does not duplicate the sender’s own paid access. A creator may separately permit transfer of an unused entitlement, atomically disabling redemption by its previous holder.</li>
+        <li><strong>No surprise spend:</strong> gifts disclose included playback and any expiry before purchase and acceptance. Metered gifts stop at their funded cap; recipient funds are never charged without separate explicit authorization.</li>
+        <li><strong>Normal enforcement:</strong> moderation blocks, age/region rules, watch quotas, and device/concurrency limits still apply. Creator Policy explicitly states which requirements a gift satisfies; gifting is not a bypass.</li>
+        <li><strong>Recipient safety:</strong> unsolicited gift notifications are opt-in and rate-limited, with sender blocking and reporting. Do not allow arbitrary sender links or attachments; display names are untrusted text, not proof of identity.</li>
+        <li><strong>Payment integrity:</strong> verify funding before enabling redemption; bind payment proof to creator, title/offer, amount/asset, and unique gift reference. Purchase and claim retries are idempotent; one payment cannot fund multiple gifts accidentally.</li>
+        <li><strong>Failure and refunds:</strong> each offer discloses rules for unclaimed, declined, expired, removed, or unavailable titles before purchase. Preserve a retryable entitlement when unlock temporarily fails; reconcile payment, redemption, and grant issuance before refund or credit so retries cannot create both free access and reimbursement. Refunds, where supported, return to the original payer, not a recipient cash-out balance.</li>
+        <li><strong>Earnings and privacy:</strong> show gift purchase, redemption, and any reversal as distinct ledger events without double-crediting watch start. Pending/available follows rail finality, not notification delivery. Do not reveal acceptance, watch status, or watch duration to the sender without recipient consent.</li>
+      </ul>
+      <p><strong>Descriptive interfaces:</strong> <code>POST /v1/gifts</code> creates a funded gift; <code>POST /v1/gifts/claim</code> atomically redeems a claim token or addressed gift; recipient-authorized accept/decline and reporting actions do not expose another account’s gift status. Key requests reference the redeemed entitlement, never the claim token as a content key.</p>
     </section>
 <section id="s10">
       <h2>10) Key Agent availability &amp; delegation</h2>
@@ -1457,7 +1491,8 @@
       <h2>Part C — Viewer experience</h2>
       <p><strong>Watch without the hustle tax.</strong>
         Browse in your language. Preview when the creator allows.
-        Unlock with a simple path—goodwill, a quick challenge, an email, pennies with a hard session cap—or skip ads by paying a few cents.
+        Unlock with a simple path—goodwill, a quick challenge, an email, or pennies with a hard session cap.
+        No platform-injected ads; optional overlays appear only after both creator and viewer opt in. The platform may ask brief quality questions.
         No surprise card holds for pocket-change video. Captions and quality that just work.
         If something is spam, scummy, or unlawful, say so in one tap. You came to watch, not to fund a black box.</p>
     </div>
@@ -1470,6 +1505,7 @@
         <li><strong>Device identity</strong> — ephemeral or recoverable keypair; multi-device if signed in. <a href="#s12">§12</a></li>
         <li><strong>Preview</strong> — free intro/trailer when Policy allows (may already be edge-cached). <a href="#s13">§13.2</a>, <a href="#s7">§7</a></li>
         <li><strong>Choose unlock path</strong> — free (goodwill, puzzle, email, social, ad, …) <em>or</em> paid with an upfront meter (“~$0.02 to start · cap $0.15”). <a href="#s8">§8</a>, <a href="#s9">§9.8</a></li>
+        <li><strong>Accept a gifted view</strong> — when someone buys you access, preview and accept or decline; accepted gifts unlock fresh device-bound grants within the disclosed scope, without surprise recipient charges. Suggest a title for free or buy an additional view for someone else. <a href="#s9">§9.13</a></li>
         <li><strong>Play</strong> — KeyGrants roll forward; ABR + captions; bytes from edge, swarm, or origin. <a href="#s13">§13.4</a>, <a href="#s7">§7</a></li>
         <li><strong>Session spend</strong> — running total on paid paths; stop raises stop new grants after a short grace. <a href="#s9">§9</a></li>
         <li><strong>Report</strong> — spam, unlawful, misleading unlock, etc.; personal “hide” is not a network strike. <a href="#s15">§15</a></li>
@@ -1526,7 +1562,7 @@
 
       <h3>12.6 Privacy defaults</h3>
       <ul>
-        <li>Minimize correlation: opaque viewer ids per creator optional; global advertising profiles are a non-goal.</li>
+        <li>Playback analytics use creator-scoped viewer pseudonyms, not global account identifiers. Per-viewer detail is creator-private (§20.1); a pseudonym alone does not anonymize a behavioral history. Global advertising profiles are a non-goal.</li>
         <li>Age and jurisdiction signals: prefer local client declarations + creator Policy over central dossiers.</li>
       </ul>
     </section>
@@ -1971,6 +2007,34 @@
         <li>Creator dashboards: completion, unlock conversion by path, origin vs edge GB, rebate spend, swarm health.</li>
         <li>Targets (product intent): control plane very high availability; media plane best-effort with degradation to origin.</li>
       </ul>
+
+      <h3>20.1 Centralized view logging and creator-private detail</h3>
+      <p><strong>One central analytics service receives playback telemetry; both the content creator and platform operator can see the aggregate overview. Only the relevant content creator can decrypt per-viewer behavioral detail.</strong> This analytics boundary does not grant an operator a viewer-history drill-down and does not expose one creator’s viewer detail to another.</p>
+      <h4>Events and interpretation</h4>
+      <ul>
+        <li><strong>Views:</strong> session start, first media played, progress, pause/resume, completion, and explicit stop. Keep buffering separate from active playback.</li>
+        <li><strong>Skipping:</strong> seek start/end positions and direction, skipped timeline intervals, playback-rate changes, and fast-forward/rewind intervals. Distinguish a seek from continuous accelerated playback; preserve media time separately from elapsed time.</li>
+        <li><strong>Leaving:</strong> last observed media position, explicit close/navigation where detectable, foreground/background transitions, and heartbeat timeout. A timeout is an inferred end, not proof of why someone left; a hidden tab does not prove absence or inattention.</li>
+        <li><strong>Embedded-link departure:</strong> for player-managed links in permitted overlays or link metadata, record the link id, title position, activation, and observable navigation outcome. Distinguish opening a new tab from leaving playback. Do not track subsequent browsing or capture destination query strings containing personal data or tokens. A URL merely pictured or spoken inside video cannot reliably be observed as a click.</li>
+        <li><strong>Event envelope:</strong> creator/title/manifest version, creator-scoped viewer pseudonym, session id, unique event id, monotonic sequence, media position/range, elapsed time, event type, and applicable disclosure/consent version. Detailed timestamps and link ids belong in the encrypted payload, not operator-visible request logs.</li>
+        <li><strong>Delivery:</strong> batch events to the central ingestion endpoint with bounded retry/offline queues, deduplication, sequence-aware handling, and explicit gaps. Browser shutdown/crash and telemetry blocking mean collection is best-effort; analytics must not claim complete observation.</li>
+      </ul>
+      <h4>Visibility and protection</h4>
+      <ul>
+        <li><strong>Shared overview:</strong> views, completion and retention curves, skip/fast-forward hotspots, exit positions, link activation/departure rates, and playback-quality summaries. Display sample size, reporting interval, and uncertainty; aggregates must not expose individual session traces.</li>
+        <li><strong>Creator-only detail:</strong> detailed event payloads are encrypted on the client to a published creator analytics public key, separate from media keys. The central server stores ciphertext; the creator decrypts in a trusted creator-controlled client or processor. Platform operators, support staff, and ordinary server jobs do not hold those decryption keys.</li>
+        <li><strong>Aggregate production:</strong> a creator-controlled processor decrypts event batches and returns coarse, versioned rollups to the central dashboard service. Central collection does not imply central plaintext processing. Rollups are creator-produced, not independently verified audience measurements, and cannot alone authorize payouts.</li>
+        <li><strong>Small audiences:</strong> suppress or combine low-count buckets and restrict time/geography/link filters and repeated queries to limit singling out or differencing attacks. No raw viewer ids, exact individual timestamps, or low-count session exports in operator reports.</li>
+        <li><strong>No identity promise:</strong> creator access to a pseudonymous timeline does not automatically reveal a viewer’s name, email, or legal identity. Do not add cross-creator identity mappings to telemetry.</li>
+        <li><strong>Residual exposure:</strong> ingestion infrastructure can still observe source IP, routing metadata, and arrival timing; minimize retained metadata, batch where practical, and restrict operational log access. Encryption does not conceal all traffic correlation or prevent an operator controlling player code from changing future collection. Review the client/update trust model before claiming protection against a malicious platform operator.</li>
+      </ul>
+      <h4>Purpose, retention, and controls</h4>
+      <ul>
+        <li>Disclose collection and creator-versus-operator visibility before collection; honor applicable analytics consent/opt-out requirements. Overlay opt-in is separate from analytics permission and does not silently authorize behavioral logging.</li>
+        <li>Limit use to disclosed creator insight and service quality; no platform advertising profiles or resale of per-viewer histories. Publish retention periods for encrypted details, aggregates, ingress metadata, and creator exports, with export/deletion workflows and narrow documented legal holds.</li>
+        <li>Analytics outages do not interrupt otherwise authorized playback. Keep billing, quota reservations, security logs, and delivery settlement on explicitly scoped operational paths; none may become an undocumented copy of the private analytics timeline. Client telemetry is not proof of human attention or payment eligibility.</li>
+        <li>Validate duplicate/out-of-order events, abrupt departure, new-tab link clicks, blocked telemetry, consent withdrawal, creator key rotation/recovery, cross-creator isolation, operator inability to decrypt stored details, and low-count aggregate privacy before enabling collection.</li>
+      </ul>
     </section>
 <section id="s21">
       <h2>21) Scalability and cost posture</h2>
@@ -1998,9 +2062,12 @@
         <li><strong>Title:</strong> uid, manifest, metadata, <strong>access Policy</strong>, <strong>delivery Policy</strong>, preview assets.</li>
         <li><strong>Segment:</strong> guid, size, checksum, storage URLs, encryption envelope refs, privacy-preserving popularity.</li>
         <li><strong>Attestation / KeyGrant:</strong> as in §8.</li>
+        <li><strong>GiftEntitlement:</strong> unique gift id, creator/title and offer/policy version, sender, optional intended recipient, protected claim-token hash, payment reference, access scope/funded cap, expiry, redemption binding and timestamps, and refund/reversal references. Track funding and redemption states separately; atomic redemption and idempotent ledger events prevent double claims and double credits. Claim tokens are not content keys. See §9.13.</li>
         <li><strong>Edge:</strong> operator id, keys, regions, tier, integrity score.</li>
         <li><strong>DeliveryClaim:</strong> PoD evidence, amounts, status.</li>
         <li><strong>DelistEvent:</strong> scope, urgency, ACKs from edges.</li>
+        <li><strong>PlaybackEventBatch:</strong> minimal routing/version envelope, creator analytics key id, and creator-encrypted session events for views, skips, speed changes, departures, and managed-link activations. Per-viewer identities and event detail remain inside the encrypted payload (§20.1).</li>
+        <li><strong>PlaybackAggregate:</strong> creator/title, coarse reporting window, metric buckets, sample sizes, suppression flags, provenance, and rollup version; shared with creator and platform operator without per-viewer drill-down.</li>
       </ul>
     </section>
 <section id="s23">
@@ -2174,6 +2241,7 @@
         <dt>Delegation Grant</dt><dd>Creator authorization for a third-party Key Agent to sign KeyGrants under constraints.</dd>
         <dt>Delivery Credits</dt><dd>Settlement units for edge caching/seeding work; separate from access payments.</dd>
         <dt>Key Agent</dt><dd>Service that evaluates Policy and issues KeyGrants; may be local or delegated.</dd>
+        <dt>Gift entitlement</dt><dd>Purchased access offered to another viewer and redeemed into recipient-bound KeyGrants; never a transfer of the sender’s decryption keys. Creator-defined scope, normal safety checks, and recipient consent apply.</dd>
         <dt>KeyGrant</dt><dd>Short-lived, viewer/device-bound authorization material to unwrap segment CEKs.</dd>
         <dt>Manifest</dt><dd>Signed, versioned description of a title’s timeline, tracks, and segment refs.</dd>
         <dt>PoD</dt><dd>Proof of Delivery — evidence used for edge settlement, not for unlock.</dd>
@@ -2217,6 +2285,7 @@
             <li>Basic report button → manual admin delist + edge purge stub.</li>
             <li>Creator console: publish, policy, simple analytics.</li>
             <li>Monetary MVP: penny <code>per_view</code> path, pending/available ledger, live ticker, sweep to creator wallet (prepaid or LN/L2 if ready).</li>
+            <li>Gifted views (§9.13): creator-enabled gift offers, funded single-use redemption, recipient-bound grants, consent-based notifications, and disclosed expiry/refund rules. Validate concurrent claims, duplicate payment events, blocked titles, and capped playback before enabling paid gifting.</li>
           </ul>
         </div>
         <div class="phase">
